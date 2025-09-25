@@ -6,31 +6,42 @@
   <title>Radical Planner</title>
   <link rel="stylesheet" href="style.css" />
   <script src="./script.js" defer></script>
+
+  <!-- FullCalendar CSS and JS -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 </head>
 <body>
-  <div class="topbar">
-    <div class="dropdown">
-        <button id="aboutButton">About</button>
-        <div id="aboutDropdown">
-            <div class="content">
-      <p><strong>Made By:</strong> Abdullah Ahmed</p>
-      <a href="https://alreeyada-school.com/" target="_blank"><img src="Images/912f95e4-e292-4fdb-9d12-6f12460cf3c8.jpeg" alt="Author" /></a>
+<div class="topbar">
+  <!-- Navigation buttons -->
+  <div class="tab-buttons">
+    <button id="plannerTab" class="active">Planner</button>
+    <button id="calendarTab">Calendar</button>
+  </div>
+
+  <!-- About dropdown -->
+  <div class="dropdown">
+    <button id="aboutButton">About</button>
+    <div id="aboutDropdown">
+      <div class="content">
+        <p><strong>Made By:</strong> Abdullah Ahmed</p>
+        <a href="https://alreeyada-school.com/" target="_blank">
+          <img src="Images/912f95e4-e292-4fdb-9d12-6f12460cf3c8.jpeg" alt="Author" />
+        </a>
+      </div>
     </div>
   </div>
 </div>
 
-  </div>
-
-  <section class="planner">
-    <h2>Radical Planner :D</h2>
-
+  <!-- Planner Section -->
+  <section class="planner" id="plannerSection">
     <div class="content-wrapper">
       <div class="sidebar">
         <br />
-        <button class="btn" id="addRowButton" onclick="addRow()" title="Add Row">+</button>
-        <button class="btn" id="addColumnButton" onclick="addColumn()" title="Add Column">+</button>
-        <button class="btn" id="removeRowButton" onclick="startRemoveRow()" title="Remove Row">-</button>
-        <button class="btn" id="removeColumnButton" onclick="startRemoveColumn()" title="Remove Column">-</button>
+        <button class="btn" id="addRowButton" title="Add Row">+</button>
+        <button class="btn" id="addColumnButton" title="Add Column">+</button>
+        <button class="btn" id="removeRowButton" title="Remove Row">-</button>
+        <button class="btn" id="removeColumnButton" title="Remove Column">-</button>
       </div>
 
       <div class="table">
@@ -49,6 +60,11 @@
     <footer class="footer">
       <!-- Footer left empty or you can put other info here -->
     </footer>
+  </section>
+
+  <!-- Calendar Section (hidden by default, shown when tab is clicked) -->
+  <section class="calendar-view" id="calendarSection" style="display:none;">
+    <div id="calendar"></div>
   </section>
 
   <div class="popup" id="popupMessage"></div>
