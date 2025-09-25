@@ -2,8 +2,14 @@ const table = document.getElementById("tableInput");
 const aboutButton = document.getElementById("aboutButton");
 const aboutDropdown = document.getElementById("aboutDropdown");
 
+const plannerTab = document.getElementById("plannerTab");
+const calendarTab = document.getElementById("calendarTab");
+const plannerSection = document.getElementById("plannerSection");
+const calendarSection = document.getElementById("calendarSection");
+
 let rowDeleteMode = false;
 let columnDeleteMode = false;
+let calendar;
 
 // Load saved table data on page load
 window.addEventListener("DOMContentLoaded", () => {
@@ -25,6 +31,13 @@ window.addEventListener("DOMContentLoaded", () => {
   document.addEventListener('click', () => {
     aboutDropdown.classList.remove('show');
   });
+
+  // Tab switching
+  plannerTab.addEventListener('click', showPlanner);
+  calendarTab.addEventListener('click', showCalendar);
+
+  // Initialize calendar
+  initCalendar();
 });
 
 // Helper function to show popup messages inside the page
@@ -40,6 +53,20 @@ function showPopup(message, duration = 3000) {
   }, duration);
 }
 
+// Show planner section
+function showPlanner() {
+  plannerSection.style.display = 'block';
+  calendarSection.style.display = 'none';
+}
+
+// Show calendar section and render
+function showCalendar() {
+  plannerSection.style.display = 'none';
+  calendarSection.style.display = 'block';
+  calendar.refetchEvents();
+}
+
+// Row/column deletion
 function startRemoveRow() {
   rowDeleteMode = true;
   columnDeleteMode = false;
@@ -184,3 +211,65 @@ table.addEventListener('click', function(event) {
     editCell(event.target);
   }
 });
+
+// Column highlight on hover (keep separate from your click handler)
+table.addEventListener('mouseover', (e) => {
+  if (!columnDeleteMode) return;
+
+  const cell = e.target.closest('td, th');
+  if (!cell) return;
+
+  const cellIndex = Array.from(cell.parentElement.children).indexOf(cell);
+
+  // Highlight all cells in this column
+  for (let row of table.rows) {
+    if (row.cells[cellIndex]) {
+      row.cells[cellIndex].classList.add('column-hover');
+    }
+  }
+});
+
+table.addEventListener('mouseout', (e) => {
+  if (!columnDeleteMode) return;
+
+  // Remove highlight from all cells
+  for (let row of table.rows) {
+    for (let cell of row.cells) {
+      cell.classList.remove('column-hover');
+    }
+  }
+});
+
+
+// Initialize FullCalendar
+function initCalendar() {
+  const calendarEl = document.getElementById('calendar');
+
+  calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    },
+    events: function(fetchInfo, successCallback, failureCallback) {
+      successCallback([]); // Always return empty, ignore table data
+    }
+  });
+  calendar.render();
+}
+
+function showPlanner() {
+  plannerSection.style.display = 'block';
+  calendarSection.style.display = 'none';
+  plannerTab.classList.add('active');
+  calendarTab.classList.remove('active');
+}
+
+function showCalendar() {
+  plannerSection.style.display = 'none';
+  calendarSection.style.display = 'block';
+  calendar.refetchEvents();
+  calendarTab.classList.add('active');
+  plannerTab.classList.remove('active');
+}
