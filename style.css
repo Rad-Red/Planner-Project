@@ -1,0 +1,248 @@
+:root {
+  --blue: #87f9ff;
+  --dark_blue: #0570fa;
+  --white: #ffffff;
+  --dark: #001747;
+  --grey-dark: #405175;
+  --grey-border: rgba(210, 210, 210, 0.75);
+  --grey-light: #eeeeee;
+  --gradient: linear-gradient(180deg, var(--blue) 0%, var(--dark_blue) 100%);
+}
+
+body {
+  background: var(--gradient);
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.planner {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+.topbar {
+  color: var(--white);
+  font-size: 1.1rem;
+  padding: 1rem 2rem;
+  background-color: var(--grey-dark);
+  width: 100%;
+  height: 4rem;
+  max-width: 1200px;
+  box-sizing: border-box;
+  display: flex;
+  gap: 0.5rem;
+  position: relative; /* for dropdown positioning */
+}
+
+.topbar button {
+  background-color: var(--dark_blue);
+  border: none;
+  color: var(--white);
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.topbar button:hover {
+  background-color: var(--blue);
+  color: var(--dark);
+}
+
+.content-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 1.8rem;
+  width: 100%;
+  max-width: 1200px;
+  align-items: flex-start;
+}
+
+.sidebar {
+  background-color: var(--grey-dark);
+  color: var(--white);
+  width: 5rem; /* Fixed sidebar width */
+  height: 40rem;
+  padding: 1rem;
+  box-sizing: border-box;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: sticky; /* Sticks when scrolling */
+  top: 0;
+  user-select: none;
+  font-size: 0.9rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.table {
+  flex-grow: 1;
+  background-color: var(--white);
+  padding: 1.2rem;
+  border-radius: 0.5rem;
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+}
+
+/* Make input fill the table cell and avoid overlap */
+table td input[type="text"] {
+  width: 100%;
+  box-sizing: border-box; /* includes padding & border in width */
+  font-size: inherit;
+  font-family: inherit;
+  padding: 6px 8px;
+  border: 1px solid var(--dark_blue);
+  border-radius: 0.2rem;
+}
+
+th,
+td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: left;
+  word-wrap: break-word;
+}
+
+/* Row delete mode: whole row glows with outline */
+.row-delete-mode tr:hover {
+  outline: 2px solid var(--dark_blue);
+  cursor: pointer;
+}
+
+/* Column delete mode: seamless glow on entire column */
+.column-delete-mode td {
+  cursor: pointer;
+}
+
+/* Highlight the entire column for delete mode */
+.column-delete-mode td.column-hover {
+  position: relative;
+  background-color: rgba(5, 112, 250, 0.15);
+  box-shadow: 0 0 8px 2px rgba(5, 112, 250, 0.6);
+  z-index: 1;
+  outline: 2px solid var(--dark_blue);
+  border: none;
+}
+
+.footer {
+  font-size: 1.1rem;
+  padding: 0.7rem 1.5rem;
+  border-radius: 0.3rem;
+  background-color: var(--white);
+  max-width: 1200px;
+  box-sizing: border-box;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  /* Hide footer because we moved content to dropdown */
+  display: none;
+}
+
+.popup {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  display: none;
+  z-index: 1000;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.btn {
+  position: static;
+  margin-bottom: 0.5rem;
+  background: var(--grey-dark);
+  color: var(--white);
+  font-size: 1.1rem;
+  padding: 0.7rem 1.5rem;
+  border-radius: 0.3rem;
+  border: none;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+  height: 40px;
+  box-sizing: border-box;
+}
+
+/* Dropdown container */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown button */
+#aboutButton {
+  background-color: var(--dark_blue);
+  color: var(--white);
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  font-size: 1rem;
+  user-select: none;
+}
+
+/* Dropdown content (hidden by default) */
+#aboutDropdown {
+  position: absolute;
+  top: 100%; /* below the button */
+  left: 0; /* align left */
+  background-color: var(--white);
+  min-width: 200px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  border-radius: 0.3rem;
+  overflow: hidden;
+
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  pointer-events: none; /* prevent clicks when hidden */
+  z-index: 1000;
+}
+
+/* Show the dropdown */
+#aboutDropdown.show {
+  max-height: 500px; /* large enough for content */
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Dropdown content inner styling */
+#aboutDropdown .content {
+  padding: 1rem;
+  color: var(--dark);
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+#aboutDropdown .content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.3rem;
+  margin-top: 0.5rem;
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Radical Planner</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="./script.js" defer></script>
+</head>
+<body>
+  <div class="topbar">
+    <div class="dropdown">
+        <button id="aboutButton">About</button>
+        <div id="aboutDropdown">
+            <div class="content">
+      <p><strong>Made By:</strong> Abdullah Ahmed</p>
+      <a href="https://alreeyada-school.com/" target="_blank"><img src="Images/912f95e4-e292-4fdb-9d12-6f12460cf3c8.jpeg" alt="Author" /></a>
+    </div>
+  </div>
+</div>
+
+  </div>
+
+  <section class="planner">
+    <h2>Radical Planner :D</h2>
+
+    <div class="content-wrapper">
+      <div class="sidebar">
+        <br />
+        <button class="btn" id="addRowButton" onclick="addRow()" title="Add Row">+</button>
+        <button class="btn" id="addColumnButton" onclick="addColumn()" title="Add Column">+</button>
+        <button class="btn" id="removeRowButton" onclick="startRemoveRow()" title="Remove Row">-</button>
+        <button class="btn" id="removeColumnButton" onclick="startRemoveColumn()" title="Remove Column">-</button>
+      </div>
+
+      <div class="table">
+        <table id="tableInput">
+          <tr>
+            <td>Cell 1</td>
+            <td>Cell 2</td>
+            <td>Cell 3</td>
+            <td>Cell 4</td>
+            <td>Cell 5</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <!-- Footer left empty or you can put other info here -->
+    </footer>
+  </section>
+
+  <div class="popup" id="popupMessage"></div>
+</body>
+</html>
