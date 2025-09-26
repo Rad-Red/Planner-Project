@@ -24,7 +24,7 @@
     <button id="aboutButton">About</button>
     <div id="aboutDropdown">
       <div class="content">
-        <p><strong>Made By:</strong> Abdullah Ahmed</p>
+        <p><strong>Made By:</strong> Abdullah Ahmed (aka Radred)</p>
         <a href="https://alreeyada-school.com/" target="_blank">
           <img src="Images/912f95e4-e292-4fdb-9d12-6f12460cf3c8.jpeg" alt="Author" />
         </a>
@@ -64,8 +64,15 @@
 
   <!-- Calendar Section (hidden by default, shown when tab is clicked) -->
   <section class="calendar-view" id="calendarSection" style="display:none;">
-    <div id="calendar"></div>
-  </section>
+  <div id="calendar"></div>
+
+  <div class="calendar-form">
+    <input type="text" id="taskTitle" placeholder="Task title">
+    <input type="date" id="taskDate">
+    <button id="addTaskButton">Add Task</button>
+  </div>
+</section>
+
 
   <div class="popup" id="popupMessage"></div>
 </body>
