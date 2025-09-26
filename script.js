@@ -253,8 +253,15 @@ function initCalendar() {
       right: 'dayGridMonth,timeGridWeek,timeGridDay'
     },
     events: function(fetchInfo, successCallback, failureCallback) {
-      successCallback([]); // Always return empty, ignore table data
-    }
+  const tasks = loadTasks();
+
+  const events = tasks.map(task => ({
+    title: task.title,
+    start: task.date
+  }));
+
+  successCallback(events);
+}
   });
   calendar.render();
 }
@@ -273,3 +280,40 @@ function showCalendar() {
   calendarTab.classList.add('active');
   plannerTab.classList.remove('active');
 }
+
+// Save tasks to localStorage
+function saveTasks(tasks) {
+  localStorage.setItem("calendarTasks", JSON.stringify(tasks));
+}
+
+// Load tasks from localStorage
+function loadTasks() {
+  const saved = localStorage.getItem("calendarTasks");
+  return saved ? JSON.parse(saved) : [];
+}
+
+// Add task button event
+document.getElementById("addTaskButton").addEventListener("click", () => {
+  const title = document.getElementById("taskTitle").value.trim();
+  const date = document.getElementById("taskDate").value;
+
+  if (!title || !date) {
+    showPopup("Please enter both title and date");
+    return;
+  }
+
+  // Add task
+  const tasks = loadTasks();
+  tasks.push({ title, date });
+  saveTasks(tasks);
+
+  // Refresh calendar events
+  calendar.refetchEvents();
+
+  // Clear inputs
+  document.getElementById("taskTitle").value = "";
+  document.getElementById("taskDate").value = "";
+
+  showPopup("Task added to calendar");
+});
+  s
