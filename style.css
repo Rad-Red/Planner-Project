@@ -366,3 +366,32 @@ td {
   background-color: var(--blue);
   color: var(--dark);
 }
+
+.calendar-form {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.calendar-form input,
+.calendar-form button {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 0.3rem;
+  border: 1px solid var(--grey-dark);
+}
+
+.calendar-form button {
+  background: var(--dark_blue);
+  color: var(--white);
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s;
+}
+
+.calendar-form button:hover {
+  background: var(--blue);
+  color: var(--dark);
+}
