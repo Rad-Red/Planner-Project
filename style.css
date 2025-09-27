@@ -10,10 +10,82 @@
 
 /* Reset */
 body {
-  background: var(--white);
   margin: 0;
   font-family: Arial, sans-serif;
-  font-size: 1.5vw; /* scale font with viewport */
+  font-size: 1.5vw;
+  background: var(--white);
+  box-sizing: border-box;
+}
+
+/* General Buttons */
+button, .btn {
+  border: none;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+button:hover, .btn:hover {
+  background-color: var(--blue);
+  color: var(--dark);
+}
+
+/* Topbar */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100vw;
+  height: 5vh;
+  background-color: var(--grey-dark);
+  color: var(--white);
+  padding: 0.5vh 1vw;
+  font-size: 1.2vw;
+  position: relative;
+}
+
+.topbar button {
+  background-color: var(--dark_blue);
+  color: var(--white);
+  padding: 0.5vh 1vw;
+  font-size: 1vw;
+}
+
+.topbar button:hover {
+  background-color: var(--blue);
+  color: var(--dark);
+}
+
+/* Tabs */
+.tab-buttons {
+  display: flex;
+  gap: 0.5vw;
+}
+
+.tab-buttons button {
+  background-color: var(--grey-dark);
+  color: var(--white);
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+}
+
+.tab-buttons button.active {
+  background-color: var(--blue);
+  color: var(--dark);
+}
+
+.tab-buttons button:hover {
+  box-shadow: 0 0 12px 2px var(--blue);
+}
+
+/* Layout */
+.content-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 1vw;
+  width: 95vw;
+  flex-grow: 1;
+  align-items: flex-start;
 }
 
 .planner {
@@ -26,95 +98,45 @@ body {
   width: 100%;
 }
 
-/* Topbar */
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100vw; /* scale with viewport */
-  height: 5vh;
-  background-color: var(--grey-dark);
-  color: var(--white);
-  padding: 0.5vh 1vw;
-  box-sizing: border-box;
-  font-size: 1.2vw;
-  position: relative;
-}
-
-.topbar button {
-  background-color: var(--dark_blue);
-  border: none;
-  color: var(--white);
-  padding: 0.5vh 1vw;
-  font-size: 1vw;
-  border-radius: 0.3vh;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.topbar button:hover {
-  background-color: var(--blue);
-  color: var(--dark);
-}
-
-.tab-buttons {
-  display: flex;
-  gap: 0.5vw;
-}
-
-.tab-buttons button {
-  background-color: var(--grey-dark);
-  color: var(--white);
-  padding: 0.3vh 0.8vw;
-  font-size: 1vw;
-  border: none;
-  border-radius: 0.3vh;
-  cursor: pointer;
-}
-
-.tab-buttons button.active {
-  background-color: var(--blue);
-  color: var(--dark);
-}
-
-/* Main content */
-.content-wrapper {
-  display: flex;
-  flex-direction: row;
-  gap: 1vw;
-  width: 95vw; /* scale with viewport */
-  flex-grow: 1;
-  align-items: flex-start;
-}
-
 /* Sidebar */
 .sidebar {
   background-color: var(--grey-dark);
   color: var(--white);
-  width: 5vw; /* scale with viewport */
+  width: 5vw;
   min-width: 50px;
-  height: auto;
   padding: 1vh 0.5vw;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1vh;
-  border-radius: 0.5vh;
   font-size: 1vw;
   flex-shrink: 0;
-  top: 0;
+  border-radius:0.5rem;
 }
 
-/* Table container */
+/* General .btn styling */
+.btn {
+  margin-bottom: 0.5rem;
+  background: var(--grey-dark);
+  color: var(--white);
+  font-size: 1.1rem;
+  padding: 0.7rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 50px;
+  height: 40px;
+}
+
+/* Table */
 .table {
   flex-grow: 1;
   background-color: var(--white);
   border-radius: 0.8vh;
-  padding: 2vh; /* this creates a gap between border and table */
+  padding: 2vh;
   width: 100%;
   overflow-x: auto;
   border: 0.5vh solid var(--grey-dark);
-  box-sizing: border-box;
 }
 
 .table table {
@@ -122,49 +144,302 @@ body {
   width: 100%;
   table-layout: fixed;
   font-size: clamp(1rem, 2vw, 1.5rem);
-  border: none; /* remove inner border if needed */
 }
 
-th,
-td {
-  border: 0.3vh solid black;
-  padding: 1vh 2vw; /* more padding for bigger cells */
+th, td {
+  border: 1px solid black;
+  padding: 8px;
   text-align: left;
   word-wrap: break-word;
 }
 
 table td input[type="text"] {
   width: 100%;
-  padding: 1vh 2vw; /* scale with cell size */
+  padding: 1vh 2vw;
   font-size: inherit;
   border: 0.3vh solid var(--dark_blue);
   border-radius: 0.5vh;
-  box-sizing: border-box;
+}
+
+/* Delete modes */
+.row-delete-mode tr:hover {
+  outline: 2px solid var(--dark_blue);
+  cursor: pointer;
+}
+
+.column-delete-mode td {
+  cursor: pointer;
+}
+
+.column-delete-mode td.column-hover {
+  position: relative;
+  background-color: rgba(5, 112, 250, 0.15);
+  box-shadow: 0 0 8px 2px rgba(5, 112, 250, 0.6);
+  outline: 2px solid var(--dark_blue);
+  border: none;
+  z-index: 1;
 }
 
 /* Footer */
 .footer {
+  display: none;
   width: 95vw;
-  padding: 1vh 1vw;
-  font-size: 1.2vw;
+  max-width: 1200px;
+  padding: 0.7rem 1.5rem;
+  font-size: 1.1rem;
   text-align: center;
-  border-radius: 0.5vh;
-  background-color: var(--white);
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 1rem;
+  background-color: var(--white);
 }
 
-/* Responsive for very small screens */
-@media (max-width: 900px) {
-  body {
-    font-size: 2vw;
+/* Popups */
+.popup {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  display: none;
+  z-index: 1000;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Task / View Popup common */
+#taskPopup, #viewTaskPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--white);
+  border: 2px solid var(--dark_blue);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  z-index: 2000;
+  width: 300px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  display: none;
+}
+
+#taskPopup {
+  padding: 1.5rem;
+}
+
+#taskPopup .fields-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+#taskPopup .field, #viewTaskPopup p {
+  border: 1px solid var(--grey-dark);
+  border-radius: 0.3rem;
+  padding: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 1rem;
+  background-color: #f9f9f9;
+}
+
+#taskPopup .field input,
+#taskPopup .field textarea {
+  border: 1px solid var(--grey-dark);
+  border-radius: 0.3rem;
+  padding: 0.4rem 0.5rem;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+}
+
+#taskPopup .buttons-container, #viewTaskPopup button {
+  text-align: right;
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  color: var(--white);
+  cursor: pointer;
+}
+
+#taskPopup button, #viewTaskPopup button {
+  border: none;
+  border-radius: 0.3rem;
+}
+
+#taskPopup button:hover, #viewTaskPopup button:hover {
+  background-color: var(--blue);
+  color: var(--dark);
+}
+
+#viewTaskPopup p strong {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+/* Dropdown */
+.dropdown {
+  position: relative;
+  display: inline-block;
+  margin-left: auto;
+}
+
+#aboutButton {
+  background-color: var(--grey-dark);
+  color: var(--white);
+  padding: 0.5rem 2rem;
+  font-size: 1rem;
+  user-select: none;
+  margin-left: auto;
+}
+
+#aboutDropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: var(--white);
+  min-width: 200px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  border-radius: 0.3rem;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+#aboutDropdown.show {
+  max-height: 500px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#aboutDropdown .content {
+  padding: 1rem;
+  color: var(--dark);
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+#aboutDropdown .content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.3rem;
+  margin-top: 0.5rem;
+}
+
+/* Calendar Section */
+#calendarSection {
+  width: 95%;
+  max-width: 100%;
+  margin: 1rem auto;
+  display: none;
+  box-sizing: border-box;
+}
+/* Calendar Section */
+#calendarSection {
+  width: 95%;
+  max-width: 1200px;
+  margin: 1rem auto;
+  display: none;
+  box-sizing: border-box;
+  border: 0.5vh solid var(--grey-dark); /* match table border */
+  border-radius: 0.8vh;                 /* rounded corners like table */
+  padding: 1rem;                        /* inner spacing */
+  background-color: var(--white);       /* make border visible */
+}
+
+/* Calendar Container */
+#calendar {
+  width: 100%;
+  max-height: 80vh;   
+  min-height: 50vh;   
+  overflow-y: auto;   
+  font-size: clamp(0.9rem, 1.2vw, 1.2rem);
+  box-sizing: border-box;
+}
+
+/* FullCalendar Buttons */
+.fc .fc-toolbar-chunk,
+.fc-button {
+  font-size: clamp(0.8rem, 1vw, 1.2rem);
+  padding: 0.4rem 0.6rem;
+}
+
+.fc-button {
+  border-radius: 0.3rem;
+  background-color: var(--dark_blue);
+  color: var(--white);
+  border: none;
+}
+
+.fc-button:hover {
+  background-color: var(--blue);
+  color: var(--dark);
+}
+
+/* Calendar forms and inputs */
+.calendar-form input,
+.calendar-form button {
+  font-size: clamp(0.9rem, 1vw, 1.1rem);
+  padding: 0.4rem 0.6rem;
+  box-sizing: border-box;
+}
+
+/* Fullscreen / large screens */
+@media (min-width: 1200px) {
+  #calendar {
+    min-height: 50vh;
+    max-height: 80vh;
+    padding: 1.5rem;
   }
 
-  .content-wrapper {
-    flex-direction: column;
-    gap: 2vh;
+  .fc .fc-toolbar-chunk,
+  .fc-button {
+    font-size: 1rem;
+    padding: 0.5rem 0.8rem;
   }
+}
+
+/* Fullscreen / large screens */
+@media (min-width: 1200px) {
+  #calendar {
+    min-height: 70vh;
+    padding: 1.5rem;
+  }
+
+  .fc .fc-toolbar-chunk,
+  .fc-button {
+    font-size: 1rem;
+    padding: 0.5rem 0.8rem;
+  }
+}
+
+/* Make FullCalendar table fully responsive */
+.fc table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.fc th, .fc td {
+  word-wrap: break-word;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  body { font-size: 2vw; }
+
+  .content-wrapper { flex-direction: column; gap: 2vh; }
 
   .sidebar {
     width: 90vw;
@@ -186,212 +461,4 @@ table td input[type="text"] {
   table td input[type="text"] {
     font-size: 1.5vw;
   }
-}
-
-th,
-td {
-  border: 1px solid black;
-  padding: 8px;
-  text-align: left;
-  word-wrap: break-word;
-}
-
-/* Row delete mode: whole row glows with outline */
-.row-delete-mode tr:hover {
-  outline: 2px solid var(--dark_blue);
-  cursor: pointer;
-}
-
-/* Column delete mode: seamless glow on entire column */
-.column-delete-mode td {
-  cursor: pointer;
-}
-
-/* Highlight the entire column for delete mode */
-.column-delete-mode td.column-hover {
-  position: relative;
-  background-color: rgba(5, 112, 250, 0.15);
-  box-shadow: 0 0 8px 2px rgba(5, 112, 250, 0.6);
-  z-index: 1;
-  outline: 2px solid var(--dark_blue);
-  border: none;
-}
-
-.footer {
-  font-size: 1.1rem;
-  padding: 0.7rem 1.5rem;
-  border-radius: 0.3rem;
-  background-color: var(--white);
-  max-width: 1200px;
-  box-sizing: border-box;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  /* Hide footer because we moved content to dropdown */
-  display: none;
-}
-
-.popup {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #333;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  display: none;
-  z-index: 1000;
-  font-family: Arial, sans-serif;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
-.btn {
-  position: static;
-  margin-bottom: 0.5rem;
-  background: var(--grey-dark);
-  color: var(--white);
-  font-size: 1.1rem;
-  padding: 0.7rem 1.5rem;
-  border-radius: 0.3rem;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 50px;
-  height: 40px;
-  box-sizing: border-box;
-}
-
-/* Dropdown container */
-.dropdown {
-  position: relative;
-  display: inline-block;
-  margin-left: auto;
-}
-
-/* Dropdown button */
-#aboutButton {
-  background-color:var(--grey-dark);
-  color: var(--white);
-  padding: 0.5rem 2rem;
-  border: none;
-  border-radius: 0.3rem;
-  cursor: pointer;
-  font-size: 1rem;
-  user-select: none;
-  margin-left:auto;
-}
-
-/* Dropdown content (hidden by default) */
-#aboutDropdown {
-  position: absolute;
-  top: 100%; /* below the button */
-  right:0; /* align right */
-  background-color: var(--white);
-  min-width: 200px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-  border-radius: 0.3rem;
-  overflow: hidden;
-
-  max-height: 0;
-  opacity: 0;
-  transition: max-height 0.3s ease, opacity 0.3s ease;
-  pointer-events: none; /* prevent clicks when hidden */
-  z-index: 1000;
-}
-
-/* Show the dropdown */
-#aboutDropdown.show {
-  max-height: 500px; /* large enough for content */
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* Dropdown content inner styling */
-#aboutDropdown .content {
-  padding: 1rem;
-  color: var(--dark);
-  font-size: 0.95rem;
-  text-align: center;
-}
-
-#aboutDropdown .content img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 0.3rem;
-  margin-top: 0.5rem;
-}
-
-/* Calendar section */
-#calendarSection {
-  width: 100%;
-  max-width: 1200px;
-  margin: 1rem auto;
-  display: none; /* hidden by default */
-}
-
-#calendar {
-  background-color: var(--white);
-  border-radius: 0.5rem;
-  padding: 1rem;
-  box-sizing: border-box;
-  width: 100%;
-  min-height:50rem;
-}
-
-/* Tab buttons hover and active glow */
-.tab-buttons button {
-  background-color: var(--grey-dark);
-  color: var(--white);
-  padding: 0.4rem 0.8rem;
-  border-radius: 0.3rem;
-  border: none;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: box-shadow 0.3s, background-color 0.3s;
-}
-
-/* Glow on hover */
-.tab-buttons button:hover {
-  box-shadow: 0 0 12px 2px var(--blue);
-  background-color: var(--blue);
-}
-
-/* Active tab glow */
-.tab-buttons button.active {
-  background-color: var(--blue);
-  color: var(--dark);
-}
-
-.calendar-form {
-  margin-top: 1rem;
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  align-items: center;
-}
-
-.calendar-form input,
-.calendar-form button {
-  padding: 0.5rem;
-  font-size: 1rem;
-  border-radius: 0.3rem;
-  border: 1px solid var(--grey-dark);
-}
-
-.calendar-form button {
-  background: var(--dark_blue);
-  color: var(--white);
-  cursor: pointer;
-  border: none;
-  transition: background-color 0.3s;
-}
-
-.calendar-form button:hover {
-  background: var(--blue);
-  color: var(--dark);
 }
