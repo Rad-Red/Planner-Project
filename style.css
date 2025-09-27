@@ -305,7 +305,8 @@ table td input[type="text"] {
 #aboutDropdown {
   position: absolute;
   top: 100%;
-  right: 0;
+  right: 0;                         /* still aligns with button */
+  transform: translateX(-25px);     /* shift left 25px */
   background-color: var(--white);
   min-width: 200px;
   box-shadow: 0 8px 16px rgba(0,0,0,0.2);
@@ -336,6 +337,58 @@ table td input[type="text"] {
   height: auto;
   border-radius: 0.3rem;
   margin-top: 0.5rem;
+}
+
+/* Tab Dropdown */
+.tab-dropdown {
+  position: relative;
+  margin-left: 1rem;
+}
+
+#tabMenuButton {
+  font-size: 1.5rem;
+  background-color: var(--grey-dark);
+  color: var(--white);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#tabMenuButton:hover {
+  background-color: var(--blue);
+  color: var(--dark);
+}
+
+.tab-menu-content {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 5vh;
+  background-color: var(--grey-dark);   /* dark grey background */
+  min-width: 180px;                     /* wider for more space */
+  border: 0.3vh solid var(--grey-dark);
+  border-radius: 0 0.3rem 0.3rem 0;
+  box-shadow: 4px 4px 8px rgba(0,0,0,0.2);
+  z-index: 1000;
+  flex-direction: column;
+}
+
+.tab-menu-content button {
+  background: var(--grey-dark);         /* match dropdown bg */
+  color: var(--white);
+  border: none;
+  padding: 0.8rem 1.2rem;               /* bigger buttons */
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+  font-size: 1rem;                      /* readable size */
+}
+
+.tab-menu-content button:hover {
+  background-color: var(--blue);
+  color: var(--dark);
 }
 
 /* Calendar Section */
