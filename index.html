@@ -12,38 +12,40 @@
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 </head>
 <body>
-<div class="topbar">
-  <!-- Navigation buttons -->
-  <div class="tab-buttons">
-    <button id="plannerTab" class="active">Planner</button>
-    <button id="calendarTab">Calendar</button>
-  </div>
 
-  <!-- About dropdown -->
-  <div class="dropdown">
-    <button id="aboutButton">About</button>
-    <div id="aboutDropdown">
-      <div class="content">
-        <p><strong>Made By:</strong> Abdullah Ahmed (aka Radred)</p>
-        <a href="https://alreeyada-school.com/" target="_blank">
-          <img src="Images/912f95e4-e292-4fdb-9d12-6f12460cf3c8.jpeg" alt="Author" />
-        </a>
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="tab-buttons">
+      <button id="plannerTab" class="active">Planner</button>
+      <button id="calendarTab">Calendar</button>
+    </div>
+
+    <div class="dropdown">
+      <button id="aboutButton">About</button>
+      <div id="aboutDropdown">
+        <div class="content">
+          <p><strong>Made By:</strong> Abdullah Ahmed (aka Radred)</p>
+          <a href="https://alreeyada-school.com/" target="_blank">
+            <img src="Images/912f95e4-e292-4fdb-9d12-6f12460cf3c8.jpeg" alt="Author" />
+          </a>
+        </div>
       </div>
     </div>
-  </div>
-</div>
+  </header>
 
   <!-- Planner Section -->
   <section class="planner" id="plannerSection">
     <div class="content-wrapper">
-      <div class="sidebar">
-        <br />
+
+      <!-- Sidebar with buttons -->
+      <aside class="sidebar">
         <button class="btn" id="addRowButton" title="Add Row">+</button>
         <button class="btn" id="addColumnButton" title="Add Column">+</button>
         <button class="btn" id="removeRowButton" title="Remove Row">-</button>
         <button class="btn" id="removeColumnButton" title="Remove Column">-</button>
-      </div>
+      </aside>
 
+      <!-- Table area -->
       <div class="table">
         <table id="tableInput">
           <tr>
@@ -55,25 +57,29 @@
           </tr>
         </table>
       </div>
-    </div>
 
-    <footer class="footer">
-      <!-- Footer left empty or you can put other info here -->
-    </footer>
+    </div>
+    <footer class="footer"></footer>
   </section>
 
-  <!-- Calendar Section (hidden by default, shown when tab is clicked) -->
-  <section class="calendar-view" id="calendarSection" style="display:none;">
-  <div id="calendar"></div>
+  <!-- Calendar Section -->
+  <section class="calendar-view" id="calendarSection">
+    <div id="calendar"></div>
+  </section>
 
-  <div class="calendar-form">
-    <input type="text" id="taskTitle" placeholder="Task title">
-    <input type="date" id="taskDate">
-    <button id="addTaskButton">Add Task</button>
-  </div>
-</section>
-
-
+  <!-- Popup messages -->
   <div class="popup" id="popupMessage"></div>
+
+  <!-- Task view popup -->
+  <div id="viewTaskPopup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); 
+background:white; border:2px solid #0570fa; border-radius:0.5rem; padding:1rem; z-index:2000; box-shadow:0 0 15px rgba(0,0,0,0.3); width:300px;">
+  <h3 id="viewTaskTitle">Task Title</h3>
+  <p><strong>Date:</strong> <span id="viewTaskDate"></span></p>
+  <p><strong>Time:</strong> <span id="viewTaskTime"></span></p>
+  <p><strong>Description:</strong> <span id="viewTaskDesc"></span></p>
+  <button id="closeViewTask" style="margin-top:0.5rem; background:#0570fa; color:white; padding:0.4rem 0.8rem; border:none; border-radius:0.3rem; cursor:pointer;">Close</button>
+    </div>
+  </div>
+
 </body>
 </html>
