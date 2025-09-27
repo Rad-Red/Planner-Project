@@ -15,11 +15,14 @@
 
   <!-- Topbar -->
   <header class="topbar">
-    <div class="tab-buttons">
-      <button id="plannerTab" class="active">Planner</button>
-      <button id="calendarTab">Calendar</button>
-    </div>
-
+    <!-- Tab Dropdown -->
+<div class="tab-dropdown">
+  <button id="tabMenuButton">&#9776;</button> <!-- three-line menu icon -->
+  <div id="tabMenuDropdown" class="tab-menu-content">
+    <button id="plannerTab">Planner</button>
+    <button id="calendarTab">Calendar</button>
+  </div>
+</div>
     <div class="dropdown">
       <button id="aboutButton">About</button>
       <div id="aboutDropdown">
