@@ -38,6 +38,27 @@ function loadFromLocalStorage() {
   }
 }
 
+// ===== Planner / Calendar Tabs =====
+function showPlanner() {
+  plannerSection.style.display = 'flex';
+  calendarSection.style.display = 'none';
+  plannerTab.classList.add('active');
+  calendarTab.classList.remove('active');
+}
+
+function showCalendar() {
+  plannerSection.style.display = 'none';
+  calendarSection.style.display = 'block';
+  calendarTab.classList.add('active');
+  plannerTab.classList.remove('active');
+
+  // Fix glitch: force FullCalendar to resize when shown
+  if (calendar) {
+    calendar.render();
+    calendar.updateSize();
+  }
+}
+
 // ===== Table Functions =====
 function addRow() {
   const numColumns = table.rows[0]?.cells.length || 1;
@@ -112,26 +133,31 @@ table.addEventListener('mouseover', e => {
   for (let row of table.rows) if (row.cells[index]) row.cells[index].classList.add('column-hover');
 });
 
-table.addEventListener('mouseout', e => {
+table.addEventListener('mouseout', () => {
   if (!columnDeleteMode) return;
   for (let row of table.rows) for (let cell of row.cells) cell.classList.remove('column-hover');
 });
 
-// ===== Planner / Calendar Tabs =====
-function showPlanner() {
-  plannerSection.style.display = 'block';
-  calendarSection.style.display = 'none';
-  plannerTab.classList.add('active');
-  calendarTab.classList.remove('active');
-}
+// ===== Dropdown menu =====
+const tabMenuButton = document.getElementById('tabMenuButton');
+const tabMenuDropdown = document.getElementById('tabMenuDropdown');
 
-function showCalendar() {
-  plannerSection.style.display = 'none';
-  calendarSection.style.display = 'block';
-  calendar.refetchEvents();
-  calendarTab.classList.add('active');
-  plannerTab.classList.remove('active');
-}
+tabMenuButton.addEventListener('click', e => {
+  e.stopPropagation();
+  tabMenuDropdown.style.display = tabMenuDropdown.style.display === 'flex' ? 'none' : 'flex';
+});
+
+document.addEventListener('click', () => tabMenuDropdown.style.display = 'none');
+
+plannerTab.addEventListener('click', () => {
+  showPlanner();
+  tabMenuDropdown.style.display = 'none';
+});
+
+calendarTab.addEventListener('click', () => {
+  showCalendar();
+  tabMenuDropdown.style.display = 'none';
+});
 
 // ===== Calendar Task Storage =====
 function saveTasks(tasks) { localStorage.setItem("calendarTasks", JSON.stringify(tasks)); }
@@ -214,8 +240,8 @@ window.addEventListener("DOMContentLoaded", () => {
   aboutButton.addEventListener('click', e => { e.stopPropagation(); aboutDropdown.classList.toggle('show'); });
   document.addEventListener('click', () => aboutDropdown.classList.remove('show'));
 
-  plannerTab.addEventListener('click', showPlanner);
-  calendarTab.addEventListener('click', showCalendar);
+  // Tabs start with planner visible
+  showPlanner();
 
   initCalendar();
 });
