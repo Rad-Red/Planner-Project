@@ -73,16 +73,20 @@
   <!-- Popup messages -->
   <div class="popup" id="popupMessage"></div>
 
-  <!-- Task view popup -->
-  <div id="viewTaskPopup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); 
+<!-- Task view popup -->
+<div id="viewTaskPopup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);
 background:white; border:2px solid #0570fa; border-radius:0.5rem; padding:1rem; z-index:2000; box-shadow:0 0 15px rgba(0,0,0,0.3); width:300px;">
   <h3 id="viewTaskTitle">Task Title</h3>
   <p><strong>Date:</strong> <span id="viewTaskDate"></span></p>
   <p><strong>Time:</strong> <span id="viewTaskTime"></span></p>
   <p><strong>Description:</strong> <span id="viewTaskDesc"></span></p>
-  <button id="closeViewTask" style="margin-top:0.5rem; background:#0570fa; color:white; padding:0.4rem 0.8rem; border:none; border-radius:0.3rem; cursor:pointer;">Close</button>
-    </div>
+  <div style="display:flex; justify-content:space-between; margin-top:0.5rem;">
+    <button id="editTaskBtn" style="background:#0570fa; color:white; padding:0.4rem 0.8rem; border:none; border-radius:0.3rem; cursor:pointer;">Edit Task</button>
+    <button id="deleteTaskBtn" style="background:#fa0505; color:white; padding:0.4rem 0.8rem; border:none; border-radius:0.3rem; cursor:pointer;">Delete Task</button>
   </div>
+  <button id="closeViewTask" style="margin-top:0.5rem; background:#0570fa; color:white; padding:0.4rem 0.8rem; border:none; border-radius:0.3rem; cursor:pointer; width:100%;">Close</button>
+</div>
+</div>
 
 </body>
 </html>
