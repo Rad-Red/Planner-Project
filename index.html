@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,6 +9,7 @@
 
   <!-- FullCalendar CSS and JS -->
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 </head>
 <body>
@@ -16,22 +17,13 @@
   <!-- Topbar -->
   <header class="topbar">
     <!-- Tab Dropdown -->
-<div class="tab-dropdown">
-  <button id="tabMenuButton">&#9776;</button> <!-- three-line menu icon -->
-  <div id="tabMenuDropdown" class="tab-menu-content">
-    <button id="plannerTab">Planner</button>
-    <button id="calendarTab">Calendar</button>
-  </div>
-</div>
-    <div class="dropdown">
-      <button id="aboutButton">About</button>
-      <div id="aboutDropdown">
-        <div class="content">
-          <p><strong>Made By:</strong> Abdullah Ahmed (aka Radred)</p>
-          <a href="https://alreeyada-school.com/" target="_blank">
-            <img src="Images/912f95e4-e292-4fdb-9d12-6f12460cf3c8.jpeg" alt="Author" />
-          </a>
-        </div>
+    <div class="tab-dropdown">
+      <button id="tabMenuButton">&#9776;</button> <!-- three-line menu icon -->
+      <div id="tabMenuDropdown" class="tab-menu-content">
+        <button id="plannerTab"><i class="fa-solid fa-clipboard-list"></i> Planner</button>
+        <button id="calendarTab"><i class="fa-solid fa-calendar-days"></i> Calendar</button>
+        <button id="settingsTab"><i class="fa-solid fa-gear"></i> Settings</button>
+        <button id="aboutTab"><i class="fa-solid fa-circle-info"></i> About</button>
       </div>
     </div>
   </header>
@@ -70,23 +62,49 @@
     <div id="calendar"></div>
   </section>
 
+  <!-- Settings Section -->
+<section id="settingsSection" style="display:none;">
+  <h2>Settings</h2>
+  <div class="setting">
+    <label for="themeSelect">Theme:</label>
+  <select id="themeSelect">
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+    <option value="sunset">Sunset</option>
+    <option value="mint">Mint</option>
+    <option value="lavender">Lavender</option>
+    <option value="peach">Peach</option>
+  </select>
+  </div>
+</section>
+
+  <!-- About Section -->
+  <section id="aboutSection" style="display:none;">
+    <div class="content-wrapper">
+      <h2>About</h2>
+      <p><strong>Made By:</strong>Radred</p>
+      <a href="https://alreeyada-school.com/" target="_blank">
+        <img src="Images/912f95e4-e292-4fdb-9d12-6f12460cf3c8.jpeg" alt="Author" />
+      </a>
+    </div>
+  </section>
+
   <!-- Popup messages -->
   <div class="popup" id="popupMessage"></div>
 
-<!-- Task view popup -->
-<div id="viewTaskPopup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);
-background:white; border:2px solid #0570fa; border-radius:0.5rem; padding:1rem; z-index:2000; box-shadow:0 0 15px rgba(0,0,0,0.3); width:300px;">
-  <h3 id="viewTaskTitle">Task Title</h3>
-  <p><strong>Date:</strong> <span id="viewTaskDate"></span></p>
-  <p><strong>Time:</strong> <span id="viewTaskTime"></span></p>
-  <p><strong>Description:</strong> <span id="viewTaskDesc"></span></p>
-  <div style="display:flex; justify-content:space-between; margin-top:0.5rem;">
-    <button id="editTaskBtn" style="background:#0570fa; color:white; padding:0.4rem 0.8rem; border:none; border-radius:0.3rem; cursor:pointer;">Edit Task</button>
-    <button id="deleteTaskBtn" style="background:#fa0505; color:white; padding:0.4rem 0.8rem; border:none; border-radius:0.3rem; cursor:pointer;">Delete Task</button>
+  <!-- Task view popup -->
+  <div id="viewTaskPopup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);
+  background:white; border:2px solid #0570fa; border-radius:0.5rem; padding:1rem; z-index:2000; box-shadow:0 0 15px rgba(0,0,0,0.3); width:300px;">
+    <h3 id="viewTaskTitle">Task Title</h3>
+    <p><strong>Date:</strong> <span id="viewTaskDate"></span></p>
+    <p><strong>Time:</strong> <span id="viewTaskTime"></span></p>
+    <p><strong>Description:</strong> <span id="viewTaskDesc"></span></p>
+    <div style="display:flex; justify-content:space-between; margin-top:0.5rem;">
+      <button id="editTaskBtn" style="background:#0570fa; color:white; padding:0.4rem 0.8rem; border:none; border-radius:0.3rem; cursor:pointer;">Edit Task</button>
+      <button id="deleteTaskBtn" style="background:#fa0505; color:white; padding:0.4rem 0.8rem; border:none; border-radius:0.3rem; cursor:pointer;">Delete Task</button>
+    </div>
+    <button id="closeViewTask" style="margin-top:0.5rem; background:#0570fa; color:white; padding:0.4rem 0.8rem; border:none; border-radius:0.3rem; cursor:pointer; width:100%;">Close</button>
   </div>
-  <button id="closeViewTask" style="margin-top:0.5rem; background:#0570fa; color:white; padding:0.4rem 0.8rem; border:none; border-radius:0.3rem; cursor:pointer; width:100%;">Close</button>
-</div>
-</div>
 
 </body>
 </html>
