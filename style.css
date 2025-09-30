@@ -1,84 +1,153 @@
-:root {
-  --blue: #87f9ff;
-  --dark_blue: #0570fa;
-  --white: #ffffff;
-  --dark: #001747;
-  --grey-dark: #405175;
-  --grey-border: rgba(210, 210, 210, 0.75);
-  --grey-light: #eeeeee;
+/* =========================
+   Theme Variables
+========================= */
+:root[data-theme="light"] {
+  --bg: #ffffff;
+  --text: #111111;
+  --surface: #f5f5f5;
+  --border: #dcdcdc;
+  --primary: #0077b6;
+  --primary-dark: #005fa3;
+  --secondary: #333333;
 }
 
-/* Reset */
+:root[data-theme="dark"] {
+  --bg: #0f1424;
+  --text: #e1e1e1;
+  --surface: #1f2437;
+  --border: #2c2f48;
+  --primary: #339af0;
+  --primary-dark: #1c7ed6;
+  --secondary: #7a7a7a;
+}
+
+:root[data-theme="sunset"] {
+  --bg: #2b1b3d;
+  --text: #fff0aa;
+  --surface: #3a1f47;
+  --border: #6d3b8f;
+  --primary: #ff3f6c;
+  --primary-dark: #e63458;
+  --secondary: #8338ec;
+}
+
+:root[data-theme="mint"] {
+  --bg: #e6f7f1;
+  --text: #034d47;
+  --surface: #d0f0e6;
+  --border: #88c7b9;
+  --primary: #00b894;
+  --primary-dark: #008f7a;
+  --secondary: #05696b;
+}
+
+:root[data-theme="lavender"] {
+  --bg: #f3f0ff;
+  --text: #2e1052;
+  --surface: #e6e0ff;
+  --border: #b197fc;
+  --primary: #845ef7;
+  --primary-dark: #5f3dc4;
+  --secondary: #4b2995;
+}
+
+:root[data-theme="peach"] {
+  --bg: #fff5f0;
+  --text: #4d1a00;
+  --surface: #ffe6d9;
+  --border: #ffbfa1;
+  --primary: #ff6b35;
+  --primary-dark: #e85d04;
+  --secondary: #b34700;
+}
+
+/* =========================
+   Reset & Base
+========================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
   font-size: 1.5vw;
-  background: var(--white);
-  box-sizing: border-box;
+  background-color: var(--bg);
+  color: var(--text);
 }
 
-/* General Buttons */
-button, .btn {
+button,
+.btn {
   border: none;
   border-radius: 0.3rem;
   cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
 }
 
-button:hover, .btn:hover {
-  background-color: var(--blue);
-  color: var(--dark);
+button:hover,
+.btn:hover {
+  background-color: var(--primary);
+  color: var(--bg);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-/* Topbar */
+/* =========================
+   Topbar
+========================= */
 .topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100vw;
   height: 5vh;
-  background-color: var(--grey-dark);
-  color: var(--white);
+  background-color: var(--secondary);
+  color: var(--text);
   padding: 0.5vh 1vw;
   font-size: 1.2vw;
   position: relative;
 }
 
 .topbar button {
-  background-color: var(--dark_blue);
-  color: var(--white);
+  background-color: var(--primary-dark);
+  color: var(--text);
   padding: 0.5vh 1vw;
   font-size: 1vw;
 }
 
 .topbar button:hover {
-  background-color: var(--blue);
-  color: var(--dark);
+  background-color: var(--primary);
+  color: var(--bg);
 }
 
-/* Tabs */
+/* =========================
+   Tab Buttons
+========================= */
 .tab-buttons {
   display: flex;
   gap: 0.5vw;
 }
 
 .tab-buttons button {
-  background-color: var(--grey-dark);
-  color: var(--white);
+  background-color: var(--secondary);
+  color: var(--text);
   padding: 0.4rem 0.8rem;
   font-size: 0.9rem;
 }
 
 .tab-buttons button.active {
-  background-color: var(--blue);
-  color: var(--dark);
+  background-color: var(--primary);
+  color: var(--bg);
 }
 
 .tab-buttons button:hover {
-  box-shadow: 0 0 12px 2px var(--blue);
+  box-shadow: 0 0 12px 2px var(--primary);
 }
 
-/* Layout */
+/* =========================
+   Layout & Planner
+========================= */
 .content-wrapper {
   display: flex;
   flex-direction: row;
@@ -98,10 +167,12 @@ button:hover, .btn:hover {
   width: 100%;
 }
 
-/* Sidebar */
+/* =========================
+   Sidebar & Buttons
+========================= */
 .sidebar {
-  background-color: var(--grey-dark);
-  color: var(--white);
+  background-color: var(--secondary);
+  color: var(--text);
   width: 5vw;
   min-width: 50px;
   padding: 1vh 0.5vw;
@@ -111,14 +182,13 @@ button:hover, .btn:hover {
   gap: 1vh;
   font-size: 1vw;
   flex-shrink: 0;
-  border-radius:0.5rem;
+  border-radius: 0.5rem;
 }
 
-/* General .btn styling */
 .btn {
   margin-bottom: 0.5rem;
-  background: var(--grey-dark);
-  color: var(--white);
+  background-color: var(--secondary);
+  color: var(--text);
   font-size: 1.1rem;
   padding: 0.7rem 1.5rem;
   display: flex;
@@ -128,15 +198,33 @@ button:hover, .btn:hover {
   height: 40px;
 }
 
-/* Table */
+/* Theme Selector Styling */
+#themeSelector {
+  margin-top: 1rem;
+  background-color: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+}
+
+#themeSelector:hover {
+  background-color: var(--primary);
+  color: var(--bg);
+}
+
+/* =========================
+   Table & Inputs
+========================= */
 .table {
   flex-grow: 1;
-  background-color: var(--white);
+  background-color: var(--surface);
   border-radius: 0.8vh;
   padding: 2vh;
   width: 100%;
   overflow-x: auto;
-  border: 0.5vh solid var(--grey-dark);
+  border: 0.5vh solid var(--secondary);
 }
 
 .table table {
@@ -146,24 +234,27 @@ button:hover, .btn:hover {
   font-size: clamp(1rem, 2vw, 1.5rem);
 }
 
-th, td {
-  border: 1px solid black;
+th,
+td {
+  border: 1px solid var(--border);
   padding: 8px;
   text-align: left;
   word-wrap: break-word;
 }
 
-table td input[type="text"] {
+td input[type="text"] {
   width: 100%;
   padding: 1vh 2vw;
   font-size: inherit;
-  border: 0.3vh solid var(--dark_blue);
+  border: 0.3vh solid var(--primary-dark);
   border-radius: 0.5vh;
 }
 
-/* Delete modes */
+/* =========================
+   Delete Modes
+========================= */
 .row-delete-mode tr:hover {
-  outline: 2px solid var(--dark_blue);
+  outline: 2px solid var(--primary-dark);
   cursor: pointer;
 }
 
@@ -173,120 +264,96 @@ table td input[type="text"] {
 
 .column-delete-mode td.column-hover {
   position: relative;
-  background-color: rgba(5, 112, 250, 0.15);
-  box-shadow: 0 0 8px 2px rgba(5, 112, 250, 0.6);
-  outline: 2px solid var(--dark_blue);
+  background-color: rgba(5,112,250,0.15);
+  box-shadow: 0 0 8px 2px rgba(5,112,250,0.6);
+  outline: 2px solid var(--primary-dark);
   border: none;
   z-index: 1;
 }
 
-/* Footer */
+/* =========================
+   Footer
+========================= */
 .footer {
-  display: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
   width: 95vw;
   max-width: 1200px;
   padding: 0.7rem 1.5rem;
   font-size: 1.1rem;
   text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  background-color: var(--white);
+  background-color: var(--surface);
 }
 
-/* Popups */
+/* =========================
+   Popups
+========================= */
 .popup {
   position: fixed;
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background: #333;
-  color: white;
+  background-color: var(--secondary);
+  color: var(--text);
   padding: 10px 20px;
-  border-radius: 5px;
+  border-radius: 0.5rem;
   display: none;
   z-index: 1000;
-  font-family: Arial, sans-serif;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 
-/* Task / View Popup common */
-#taskPopup, #viewTaskPopup {
+#taskPopup,
+#viewTaskPopup {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: var(--white);
-  border: 2px solid var(--dark_blue);
-  border-radius: 0.5rem;
-  padding: 1rem;
-  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  background-color: var(--bg);
+  border: 2px solid var(--primary);
+  border-radius: 0.8rem;
+  padding: 1.5rem;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
   z-index: 2000;
-  width: 300px;
+  width: 320px;
   font-size: 1rem;
-  box-sizing: border-box;
   display: none;
 }
 
-#taskPopup {
-  padding: 1.5rem;
-}
-
-#taskPopup .fields-container {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-#taskPopup .field, #viewTaskPopup p {
-  border: 1px solid var(--grey-dark);
-  border-radius: 0.3rem;
-  padding: 0.5rem;
+#taskPopup input,
+#viewTaskPopup input,
+#taskPopup textarea,
+#viewTaskPopup textarea {
   width: 100%;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  font-size: 1rem;
-  background-color: #f9f9f9;
-}
-
-#taskPopup .field input,
-#taskPopup .field textarea {
-  border: 1px solid var(--grey-dark);
-  border-radius: 0.3rem;
-  padding: 0.4rem 0.5rem;
-  font-size: 1rem;
-  width: 100%;
-  box-sizing: border-box;
-  outline: none;
-}
-
-#taskPopup .buttons-container, #viewTaskPopup button {
-  text-align: right;
+  padding: 0.7rem 1rem;
   margin-top: 0.5rem;
-  padding: 0.4rem 0.8rem;
-  color: var(--white);
-  cursor: pointer;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background-color: var(--surface);
+  color: var(--text);
+  font-size: 1rem;
 }
 
-#taskPopup button, #viewTaskPopup button {
+/* Popup Buttons */
+#taskPopup button,
+#viewTaskPopup button {
+  background-color: var(--primary);
+  color: var(--bg);
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+  border-radius: 0.5rem;
   border: none;
-  border-radius: 0.3rem;
 }
 
-#taskPopup button:hover, #viewTaskPopup button:hover {
-  background-color: var(--blue);
-  color: var(--dark);
+#taskPopup button:hover,
+#viewTaskPopup button:hover {
+  background-color: var(--primary-dark);
 }
 
-#viewTaskPopup p strong {
-  display: block;
-  margin-bottom: 0.25rem;
-}
-
-/* Dropdown */
+/* =========================
+   About Dropdown
+========================= */
 .dropdown {
   position: relative;
   display: inline-block;
@@ -294,20 +361,17 @@ table td input[type="text"] {
 }
 
 #aboutButton {
-  background-color: var(--grey-dark);
-  color: var(--white);
+  background-color: var(--secondary);
+  color: var(--text);
   padding: 0.5rem 2rem;
   font-size: 1rem;
-  user-select: none;
-  margin-left: auto;
 }
 
 #aboutDropdown {
   position: absolute;
   top: 100%;
-  right: 0;                         /* still aligns with button */
-  transform: translateX(-25px);     /* shift left 25px */
-  background-color: var(--white);
+  right: 0;
+  background-color: var(--surface);
   min-width: 200px;
   box-shadow: 0 8px 16px rgba(0,0,0,0.2);
   border-radius: 0.3rem;
@@ -327,9 +391,9 @@ table td input[type="text"] {
 
 #aboutDropdown .content {
   padding: 1rem;
-  color: var(--dark);
   font-size: 0.95rem;
   text-align: center;
+  color: var(--text);
 }
 
 #aboutDropdown .content img {
@@ -339,7 +403,9 @@ table td input[type="text"] {
   margin-top: 0.5rem;
 }
 
-/* Tab Dropdown */
+/* =========================
+   Tab Dropdown
+========================= */
 .tab-dropdown {
   position: relative;
   margin-left: 1rem;
@@ -347,18 +413,17 @@ table td input[type="text"] {
 
 #tabMenuButton {
   font-size: 1.5rem;
-  background-color: var(--grey-dark);
-  color: var(--white);
+  background-color: var(--secondary);
+  color: var(--text);
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 0.3rem;
   cursor: pointer;
-  transition: background 0.3s;
 }
 
 #tabMenuButton:hover {
-  background-color: var(--blue);
-  color: var(--dark);
+  background-color: var(--primary);
+  color: var(--bg);
 }
 
 .tab-menu-content {
@@ -366,9 +431,8 @@ table td input[type="text"] {
   position: fixed;
   left: 0;
   top: 5vh;
-  background-color: var(--grey-dark);   /* dark grey background */
-  min-width: 180px;                     /* wider for more space */
-  border: 0.3vh solid var(--grey-dark);
+  background-color: var(--secondary);
+  min-width: 180px;
   border-radius: 0 0.3rem 0.3rem 0;
   box-shadow: 4px 4px 8px rgba(0,0,0,0.2);
   z-index: 1000;
@@ -376,123 +440,77 @@ table td input[type="text"] {
 }
 
 .tab-menu-content button {
-  background: var(--grey-dark);         /* match dropdown bg */
-  color: var(--white);
-  border: none;
-  padding: 0.8rem 1.2rem;               /* bigger buttons */
+  background-color: var(--secondary);
+  color: var(--text);
+  padding: 0.8rem 1.2rem;
   text-align: left;
   width: 100%;
-  cursor: pointer;
-  font-size: 1rem;                      /* readable size */
+  font-size: 1rem;
 }
 
 .tab-menu-content button:hover {
-  background-color: var(--blue);
-  color: var(--dark);
+  background-color: var(--primary);
+  color: var(--bg);
 }
 
-/* Calendar Section */
-#calendarSection {
-  width: 95%;
-  max-width: 100%;
-  margin: 1rem auto;
-  display: none;
-  box-sizing: border-box;
-}
-/* Calendar Section */
+/* =========================
+   Calendar
+========================= */
 #calendarSection {
   width: 95%;
   max-width: 1200px;
   margin: 1rem auto;
   display: none;
-  box-sizing: border-box;
-  border: 0.5vh solid var(--grey-dark); /* match table border */
-  border-radius: 0.8vh;                 /* rounded corners like table */
-  padding: 1rem;                        /* inner spacing */
-  background-color: var(--white);       /* make border visible */
+  border: 0.5vh solid var(--secondary);
+  border-radius: 0.8vh;
+  padding: 1rem;
+  background-color: var(--surface);
 }
 
-/* Calendar Container */
 #calendar {
   width: 100%;
-  max-height: 80vh;   
-  min-height: 50vh;   
-  overflow-y: auto;   
+  max-height: 80vh;
+  min-height: 50vh;
+  overflow-y: auto;
   font-size: clamp(0.9rem, 1.2vw, 1.2rem);
-  box-sizing: border-box;
-}
-
-/* FullCalendar Buttons */
-.fc .fc-toolbar-chunk,
-.fc-button {
-  font-size: clamp(0.8rem, 1vw, 1.2rem);
-  padding: 0.4rem 0.6rem;
 }
 
 .fc-button {
   border-radius: 0.3rem;
-  background-color: var(--dark_blue);
-  color: var(--white);
+  background-color: var(--primary-dark);
+  color: var(--text);
   border: none;
 }
 
 .fc-button:hover {
-  background-color: var(--blue);
-  color: var(--dark);
+  background-color: var(--primary);
+  color: var(--bg);
 }
 
-/* Calendar forms and inputs */
-.calendar-form input,
-.calendar-form button {
-  font-size: clamp(0.9rem, 1vw, 1.1rem);
-  padding: 0.4rem 0.6rem;
-  box-sizing: border-box;
+/* =========================
+   Hover States
+========================= */
+.table table td:hover {
+  background-color: rgba(0,0,0,0.05);
 }
 
-/* Fullscreen / large screens */
-@media (min-width: 1200px) {
-  #calendar {
-    min-height: 50vh;
-    max-height: 80vh;
-    padding: 1.5rem;
-  }
-
-  .fc .fc-toolbar-chunk,
-  .fc-button {
-    font-size: 1rem;
-    padding: 0.5rem 0.8rem;
-  }
+#viewTaskPopup .task-item:hover {
+  background-color: rgba(0,0,0,0.05);
+  cursor: pointer;
 }
 
-/* Fullscreen / large screens */
-@media (min-width: 1200px) {
-  #calendar {
-    min-height: 70vh;
-    padding: 1.5rem;
-  }
-
-  .fc .fc-toolbar-chunk,
-  .fc-button {
-    font-size: 1rem;
-    padding: 0.5rem 0.8rem;
-  }
-}
-
-/* Make FullCalendar table fully responsive */
-.fc table {
-  width: 100%;
-  table-layout: fixed;
-}
-
-.fc th, .fc td {
-  word-wrap: break-word;
-}
-
-/* Responsive */
+/* =========================
+   Responsive
+========================= */
 @media (max-width: 900px) {
-  body { font-size: 2vw; }
+  body {
+    font-size: 2vw;
+  }
 
-  .content-wrapper { flex-direction: column; gap: 2vh; }
+  .content-wrapper {
+    flex-direction: column;
+    gap: 2vh;
+  }
 
   .sidebar {
     width: 90vw;
@@ -511,7 +529,7 @@ table td input[type="text"] {
     flex-wrap: wrap;
   }
 
-  table td input[type="text"] {
+  td input[type="text"] {
     font-size: 1.5vw;
   }
 }
