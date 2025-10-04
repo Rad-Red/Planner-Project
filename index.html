@@ -22,6 +22,7 @@
       <div id="tabMenuDropdown" class="tab-menu-content">
         <button id="plannerTab"><i class="fa-solid fa-clipboard-list"></i> Planner</button>
         <button id="calendarTab"><i class="fa-solid fa-calendar-days"></i> Calendar</button>
+        <button id="notesTab"><i class="fa-solid fa-note-sticky"></i> Notes</button>
         <button id="settingsTab"><i class="fa-solid fa-gear"></i> Settings</button>
         <button id="aboutTab"><i class="fa-solid fa-circle-info"></i> About</button>
       </div>
@@ -62,19 +63,80 @@
     <div id="calendar"></div>
   </section>
 
+<!-- Notes Section -->
+<section id="notesSection" style="display:none;">
+  <div class="notes-container">
+    <aside class="notes-sidebar">
+      <div class="notes-sidebar-header">
+        <h2>Notes</h2>
+        <div class="notes-actions">
+          <button id="newPageBtn" title="New Page">New</button>
+          <button id="deletePageBtn" title="Delete Page">Delete</button>
+        </div>
+      </div>
+
+      <div class="notes-search">
+        <input id="notesSearch" placeholder="Search pages..." />
+      </div>
+
+      <ul id="pagesList" class="pages-list" aria-label="Pages list"></ul>
+    </aside>
+
+    <main class="notes-editor-wrap">
+      <div class="note-topbar">
+        <input id="noteTitleInput" class="note-title" placeholder="Untitled page" />
+        <div class="note-top-actions">
+          <span id="lastSaved" class="last-saved">Not saved yet</span>
+    <div class="notes-dropdown" id="notesConfigDropdown">
+    <button id="notesDropdownBtn">Settings</button>
+    <div class="notes-dropdown-menu" id="notesDropdownMenu">
+      <div class="dropdown-item">
+        <label for="fontSize">Font Size:</label>
+        <input type="number" id="fontSize" min="10" max="36" value="14"> px
+      </div>
+      <div class="dropdown-item">
+        <label for="fontFamily">Font Family:</label>
+        <select id="fontFamily">
+          <option value="Arial">Arial</option>
+          <option value="Verdana">Verdana</option>
+          <option value="Times New Roman">Times New Roman</option>
+          <option value="Courier New">Courier New</option>
+        </select>
+      </div>
+      <div class="dropdown-item">
+        <label for="lineHeight">Line Height:</label>
+        <input type="number" id="lineHeight" min="1" max="3" step="0.1" value="1.5">
+      </div>
+      <div class="dropdown-item">
+        <label for="textColor">Text Color:</label>
+        <input type="color" id="textColor" value="#000000">
+      </div>
+    </div>
+  </div>
+        </div>
+      </div>
+
+      <div id="notesEditor" class="notes-editor" contenteditable="true" spellcheck="true"
+           role="textbox" aria-multiline="true" placeholder="Start writing..."></div>
+    </main>
+  </div>
+</section>
+
   <!-- Settings Section -->
 <section id="settingsSection" style="display:none;">
   <h2>Settings</h2>
   <div class="setting">
     <label for="themeSelect">Theme:</label>
-  <select id="themeSelect">
-    <option value="light">Light</option>
-    <option value="dark">Dark</option>
-    <option value="sunset">Sunset</option>
-    <option value="mint">Mint</option>
-    <option value="lavender">Lavender</option>
-    <option value="peach">Peach</option>
-  </select>
+  <div class="custom-dropdown">
+    <button id="themeDropdownButton">Theme</button>
+    <div id="themeDropdownMenu" class="dropdown-menu">
+      <div data-theme="light">Light</div>
+      <div data-theme="dark">Dark</div>
+      <div data-theme="sunset">Sunset</div>
+      <div data-theme="mint">Mint</div>
+      <div data-theme="lavender">Lavender</div>
+      <div data-theme="peach">Peach</div>
+    </div>
   </div>
 </section>
 
@@ -98,6 +160,14 @@
     <h3 id="viewTaskTitle">Task Title</h3>
     <p><strong>Date:</strong> <span id="viewTaskDate"></span></p>
     <p><strong>Time:</strong> <span id="viewTaskTime"></span></p>
+    <label for="reminderTime">Remind me in:</label>
+<select id="reminderTime">
+  <option value="">No reminder</option>
+  <option value="30">30 minutes</option>
+  <option value="60">1 hour</option>
+  <option value="120">2 hours</option>
+  <option value="240">4 hours</option>
+</select>
     <p><strong>Description:</strong> <span id="viewTaskDesc"></span></p>
     <div style="display:flex; justify-content:space-between; margin-top:0.5rem;">
       <button id="editTaskBtn" style="background:#0570fa; color:white; padding:0.4rem 0.8rem; border:none; border-radius:0.3rem; cursor:pointer;">Edit Task</button>
