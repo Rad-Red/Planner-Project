@@ -28,35 +28,42 @@
       </div>
     </div>
   </header>
+  <!-- Floating Add Widget button (kept at top-level so script can find and restyle it into a FAB) -->
+  <button id="addWidgetButton" class="fab" title="Add Widget" aria-label="Add Widget">+
+  </button>
 
-  <!-- Planner Section -->
-  <section class="planner" id="plannerSection">
-    <div class="content-wrapper">
+<!-- Planner Section -->
+<!-- Planner Section -->
+<section class="planner" id="plannerSection">
+  <div class="content-wrapper">
+    <!-- Dashboard (widgets will appear here) -->
+    <div id="dashboard"></div>
+  </div>
+  <footer class="footer"></footer>
+</section>
 
-      <!-- Sidebar with buttons -->
-      <aside class="sidebar">
-        <button class="btn" id="addRowButton" title="Add Row">+</button>
-        <button class="btn" id="addColumnButton" title="Add Column">+</button>
-        <button class="btn" id="removeRowButton" title="Remove Row">-</button>
-        <button class="btn" id="removeColumnButton" title="Remove Column">-</button>
-      </aside>
 
-      <!-- Table area -->
-      <div class="table">
-        <table id="tableInput">
-          <tr>
-            <td>Cell 1</td>
-            <td>Cell 2</td>
-            <td>Cell 3</td>
-            <td>Cell 4</td>
-            <td>Cell 5</td>
-          </tr>
-        </table>
-      </div>
-
-    </div>
-    <footer class="footer"></footer>
-  </section>
+<!-- Widget Preset Popup -->
+<div id="widgetPresetPopup" class="modal-popup" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-header">
+    <div class="mh-icon"><i class="fa-solid fa-layer-group"></i></div>
+    <h3>Select Widget Preset</h3>
+  </div>
+  <button class="modal-top-close" aria-label="Close">&times;</button>
+  <div id="widgetPresetOptions" class="modal-options">
+    <button class="option-card" data-preset="blank"><i class="fa-regular fa-square"></i><span>Blank</span></button>
+    <button class="option-card" data-preset="weather"><i class="fa-solid fa-cloud-sun"></i><span>Weather</span></button>
+    <button class="option-card" data-preset="recentNotes"><i class="fa-regular fa-note-sticky"></i><span>Recent</span></button>
+    <button class="option-card" data-preset="calendar"><i class="fa-solid fa-calendar-days"></i><span>Calendar</span></button>
+    <button class="option-card" data-preset="reminders"><i class="fa-solid fa-bell"></i><span>Reminders</span></button>
+    <button class="option-card" data-preset="tasks"><i class="fa-solid fa-list-check"></i><span>Tasks</span></button>
+    <button class="option-card" data-preset="clock"><i class="fa-solid fa-clock"></i><span>Clock</span></button>
+    <button class="option-card" data-preset="quotes"><i class="fa-solid fa-quote-left"></i><span>Quotes</span></button>
+  </div>
+  <div style="margin-top:0.8rem;">
+    <button id="closePresetPopup" class="modal-close">Close</button>
+  </div>
+</div>
 
   <!-- Calendar Section -->
   <section class="calendar-view" id="calendarSection">
@@ -138,6 +145,63 @@
       <div data-theme="peach">Peach</div>
     </div>
   </div>
+  </div>
+
+  <div class="setting">
+    <label for="widgetThemeSelect">Widgets appearance:</label>
+    <select id="widgetThemeSelect">
+      <option value="inherit">Follow site theme</option>
+      <option value="light">Widgets - Light</option>
+      <option value="dark">Widgets - Dark</option>
+    </select>
+  </div>
+
+  <div class="setting">
+    <label>Clock & Weather location</label>
+    <div class="setting-grid location-settings">
+      <div class="field">
+        <label for="useDeviceLocation">Use device location</label>
+        <input type="checkbox" id="useDeviceLocation" checked>
+      </div>
+
+      <div id="locationOverrides" class="override-panel" style="display:none;">
+        <div class="field">
+          <label for="overrideLat">Latitude</label>
+          <input id="overrideLat" type="number" step="0.0001" placeholder="51.5074">
+        </div>
+
+        <div class="field">
+          <label for="overrideLon">Longitude</label>
+          <input id="overrideLon" type="number" step="0.0001" placeholder="-0.1278">
+        </div>
+
+        <div class="field">
+          <label for="overrideLocationInput">Location</label>
+          <div class="autocomplete-wrap">
+            <input id="overrideLocationInput" placeholder="Start typing a country or capital...">
+            <div id="locationSuggestions" class="location-suggestions" aria-label="Location suggestions" style="display:none;position:absolute;left:0;right:0;z-index:4000;"></div>
+          </div>
+          <input id="overrideCity" type="hidden">
+        </div>
+
+        <div class="field">
+          <label for="overrideTimezoneSearch">Timezone</label>
+          <input id="overrideTimezoneSearch" type="search" placeholder="Search timezones...">
+        </div>
+
+        <div class="field">
+          <label for="overrideTimezone">Timezone results</label>
+          <select id="overrideTimezone" size="5" aria-label="Timezone options">
+            <option value="auto">Auto (from location)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <div class="helper">If you disable device location, the clock and weather will use the latitude/longitude and timezone you enter.</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
   <!-- About Section -->
@@ -155,25 +219,30 @@
   <div class="popup" id="popupMessage"></div>
 
   <!-- Task view popup -->
-  <div id="viewTaskPopup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);
-  background:white; border:2px solid #0570fa; border-radius:0.5rem; padding:1rem; z-index:2000; box-shadow:0 0 15px rgba(0,0,0,0.3); width:300px;">
-    <h3 id="viewTaskTitle">Task Title</h3>
-    <p><strong>Date:</strong> <span id="viewTaskDate"></span></p>
-    <p><strong>Time:</strong> <span id="viewTaskTime"></span></p>
-    <label for="reminderTime">Remind me in:</label>
-<select id="reminderTime">
-  <option value="">No reminder</option>
-  <option value="30">30 minutes</option>
-  <option value="60">1 hour</option>
-  <option value="120">2 hours</option>
-  <option value="240">4 hours</option>
-</select>
-    <p><strong>Description:</strong> <span id="viewTaskDesc"></span></p>
-    <div style="display:flex; justify-content:space-between; margin-top:0.5rem;">
-      <button id="editTaskBtn" style="background:#0570fa; color:white; padding:0.4rem 0.8rem; border:none; border-radius:0.3rem; cursor:pointer;">Edit Task</button>
-      <button id="deleteTaskBtn" style="background:#fa0505; color:white; padding:0.4rem 0.8rem; border:none; border-radius:0.3rem; cursor:pointer;">Delete Task</button>
+  <div id="viewTaskPopup" class="modal-popup small" role="dialog" aria-modal="true" aria-hidden="true">
+    <button class="modal-top-close" aria-label="Close">&times;</button>
+    <div class="modal-header">
+      <div class="mh-icon"><i class="fa-solid fa-calendar-day"></i></div>
+      <h3 id="viewTaskTitle">Task Title</h3>
     </div>
-    <button id="closeViewTask" style="margin-top:0.5rem; background:#0570fa; color:white; padding:0.4rem 0.8rem; border:none; border-radius:0.3rem; cursor:pointer; width:100%;">Close</button>
+    <div class="modal-body">
+      <p><strong>Date:</strong> <span id="viewTaskDate"></span></p>
+      <p><strong>Time:</strong> <span id="viewTaskTime"></span></p>
+      <label for="reminderTime">Remind me in:</label>
+      <select id="reminderTime">
+        <option value="">No reminder</option>
+        <option value="30">30 minutes</option>
+        <option value="60">1 hour</option>
+        <option value="120">2 hours</option>
+        <option value="240">4 hours</option>
+      </select>
+      <p><strong>Description:</strong> <span id="viewTaskDesc"></span></p>
+    </div>
+    <div class="modal-actions">
+      <button id="editTaskBtn" class="btn-primary">Edit Task</button>
+      <button id="deleteTaskBtn" class="btn-danger">Delete Task</button>
+    </div>
+    <button id="closeViewTask" class="modal-close">Close</button>
   </div>
 
 </body>
