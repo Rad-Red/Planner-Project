@@ -1,3 +1,161 @@
+/* Final cleaned stylesheet for Planner-Project
+   - Responsive base font-size
+   - Avoids vw-based widths that cause overflow
+   - Positions dropdowns relative to parent
+   - Small FAB tweaks for mobile
+*/
+
+:root {
+  --bg: #ffffff;
+  --text: #0b1220;
+  --surface: #f6f7f9;
+  --border: #d7dbe0;
+  --primary: #0077b6;
+  --primary-dark: #005fa3;
+  --secondary: #2b3138;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  font-size: clamp(14px, 1.2vw, 18px);
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+.topbar { display:flex; align-items:center; justify-content:space-between; width:100%; padding:0.6rem 1rem; background:var(--secondary); color:var(--text); }
+.content-wrapper { display:flex; gap:1rem; width:100%; }
+
+.widgets-container { display:grid; grid-template-columns: repeat(auto-fill,minmax(200px,1fr)); gap:1rem; padding:1rem; }
+.widget { border-radius:0.8rem; padding:0.6rem; background:var(--surface); border:1px solid var(--border); min-width:160px; min-height:120px; }
+
+#dashboard { position:relative; width:100%; min-height: calc(100vh - 6vh); padding:1rem; }
+
+.fab { position:fixed; right:24px; bottom:24px; width:56px; height:56px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; z-index:4000; }
+
+.modal-popup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:var(--surface); color:var(--text); border-radius:0.6rem; padding:1.8rem; width:min(92vw,420px); box-shadow:0 18px 50px rgba(6,10,20,0.55); }
+.modal-header { display:flex; align-items:center; gap:0.75rem; padding-bottom:0.6rem; border-bottom:1px solid rgba(0,0,0,0.06); }
+
+.location-suggestions { max-height:220px; overflow:auto; background:var(--surface); border:1px solid var(--border); border-radius:0.45rem; }
+
+.tab-dropdown { position:relative; }
+.tab-menu-content { position:absolute; left:0; top:100%; background:var(--secondary); color:#fff; min-width:180px; border-radius:0 0.3rem 0.3rem 0; box-shadow:4px 4px 8px rgba(0,0,0,0.2); overflow:hidden; max-height:0; opacity:0; transform:translateX(-6px); transition: max-height .28s ease, opacity .28s ease, transform .2s ease; }
+.tab-menu-content.show { max-height:400px; opacity:1; transform:translateX(0); }
+
+/* Notes area */
+.notes-container { display:flex; width:100%; gap:1rem; padding:0.5rem; }
+.notes-sidebar { width:250px; min-width:200px; padding:0.75rem; background:var(--surface); border:1px solid var(--border); border-radius:0.6rem; }
+.notes-editor-wrap { flex:1; padding:0.5rem; min-width:300px; max-width:calc(100% - 270px); }
+
+@media (max-width:900px) {
+  .content-wrapper, .notes-container { flex-direction:column; gap:1rem; }
+  .notes-sidebar { width:100%; display:flex; flex-direction:row; gap:0.5rem; padding:0.4rem; }
+  .notes-editor { min-height:50vh; }
+}
+
+@media (max-width:560px) {
+  .fab { right:14px; bottom:14px; width:48px; height:48px; }
+}
+
+/* utility buttons */
+.btn-primary { background:var(--primary); color:#fff; border:none; padding:0.45rem 0.7rem; border-radius:0.4rem; }
+
+/* end */
+/* Cleaned responsive stylesheet for Planner-Project
+   Merged responsive updates and removed merge markers.
+*/
+
+:root[data-theme="light"] {
+  --bg: #ffffff;
+  --text: #0b1220;
+  --surface: #f6f7f9;
+  --border: #d7dbe0;
+  --primary: #0077b6;
+  --primary-dark: #005fa3;
+  --secondary: #2b3138;
+  --on-primary: #ffffff;
+  --on-secondary: #ffffff;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0f1424;
+  --text: #ffffff;
+  --surface: #121521;
+  --border: #202335;
+  --primary: #58a6ff;
+  --primary-dark: #2f82ff;
+  --secondary: #b9c0d6;
+  --on-primary: #0f1424;
+  --on-secondary: #0f1424;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  font-size: clamp(14px, 1.2vw, 18px);
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+button, .btn { border: none; border-radius: 0.3rem; cursor: pointer; }
+
+.topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  width:100%; height:auto; background:var(--secondary); color:var(--text);
+  padding:0.6rem 1rem; font-size:1rem; position:relative;
+}
+
+.content-wrapper { display:flex; gap:1rem; width:100%; flex-grow:1; }
+.planner { display:flex; flex-direction:column; gap:1vh; padding:1vh 1vw; min-height:100vh; width:100%; }
+
+.widgets-container { display:grid; grid-template-columns: repeat(auto-fill,minmax(200px,1fr)); gap:1rem; padding:1rem; height:calc(100vh - 50px); overflow-y:auto; }
+.widget { border-radius:0.8rem; padding:0.6rem; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06)); border:1px solid rgba(0,0,0,0.04); box-shadow:0 6px 18px rgba(2,6,23,0.22); min-width:160px; min-height:120px; }
+
+#dashboard { position:relative; flex:1 1 auto; width:100%; min-height:calc(100vh - 6vh); padding:1rem; overflow:auto; background:transparent; }
+
+.fab { position:fixed; right:24px; bottom:24px; width:56px; height:56px; border-radius:50%; background:var(--primary); color:var(--bg); display:flex; align-items:center; justify-content:center; font-size:1.4rem; z-index:4000; }
+
+.modal-popup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:var(--surface); color:var(--text); border-radius:0.6rem; padding:1.8rem; z-index:3000; width:min(92vw,420px); box-shadow:0 18px 50px rgba(6,10,20,0.55); }
+.modal-header { display:flex; align-items:center; gap:0.75rem; padding-bottom:0.6rem; border-bottom:1px solid rgba(255,255,255,0.03); margin-bottom:0.7rem; }
+.modal-body .fields-container { display:grid; grid-template-columns:140px 1fr; gap:0.5rem 0.9rem; align-items:center; }
+
+.location-suggestions { max-height:220px; overflow-y:auto; background:var(--surface); border:1px solid var(--border); border-radius:0.45rem; }
+
+.tab-dropdown { position:relative; margin-left:1rem; }
+.tab-menu-content { position:absolute; left:0; top:100%; background:var(--secondary); color:var(--on-secondary); min-width:180px; border-radius:0 0.3rem 0.3rem 0; box-shadow:4px 4px 8px rgba(0,0,0,0.2); z-index:1000; overflow:hidden; max-height:0; opacity:0; transform:translateX(-6px); transition: max-height .28s, opacity .28s, transform .2s; }
+.tab-menu-content.show { max-height:400px; opacity:1; transform:translateX(0); }
+
+#calendarSection { width:95%; max-width:1200px; margin:1rem auto; display:none; border:0.5vh solid var(--secondary); border-radius:0.8vh; padding:1rem; background:var(--surface); }
+
+.notes-container { display:flex; width:100%; max-width:100%; padding:0.5rem; gap:1rem; min-height:calc(100vh - 5vh); }
+.notes-sidebar { width:250px; min-width:200px; padding:0.75rem; background:var(--surface); border:1px solid var(--border); border-radius:0.6rem; }
+.notes-editor-wrap { flex-grow:1; padding:0.5rem; min-width:300px; max-width:calc(100% - 270px); }
+
+/* Responsive tweaks */
+@media (max-width:900px) {
+  .content-wrapper, .notes-container { flex-direction:column; gap:1.25rem; }
+  .notes-sidebar { width:100%; display:flex; flex-direction:row; gap:0.5rem; padding:0.4rem; }
+  .notes-editor { min-height:50vh; }
+}
+
+@media (max-width:560px) {
+  .fab { right:14px; bottom:14px; width:48px; height:48px; font-size:1.1rem; }
+  .fab-label { right:70px; bottom:20px; }
+}
+
+/* Basic utilities kept intentionally small to avoid conflicts */
+.btn-primary { background:var(--primary); color:var(--bg); border:none; padding:0.45rem 0.7rem; border-radius:0.4rem; }
+.btn-secondary { background:transparent; color:var(--text); border:1px solid var(--border); padding:0.45rem 0.7rem; border-radius:0.4rem; }
+
+/* End of cleaned stylesheet */
 /* =========================
    Theme Variables
 ========================= */
@@ -85,7 +243,8 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  font-size: 1.5vw;
+  /* Use a stable, responsive base font-size: clamp keeps it readable on phones and desktops */
+  font-size: clamp(14px, 1.2vw, 18px);
   background-color: var(--bg);
   color: var(--text);
 }
@@ -112,12 +271,12 @@ button:hover,
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100vw;
-  height: 5vh;
+  width: 100%; /* prefer percent so scrollbars don't cause overflow */
+  height: auto; /* allow content to define height on small screens */
   background-color: var(--secondary);
   color: var(--text);
-  padding: 0.5vh 1vw;
-  font-size: 1.2vw;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
   position: relative;
 }
 
@@ -163,8 +322,8 @@ button:hover,
 .content-wrapper {
   display: flex;
   flex-direction: row;
-  gap: 1vw;
-  width: 100vw; /* allow full-bleed dashboard */
+  gap: 1rem;
+  width: 100%; /* avoid viewport-width issues on mobile */
   flex-grow: 1;
   align-items: stretch;
 }
@@ -367,7 +526,1716 @@ button:hover,
 #dashboard {
   position: relative;
   flex: 1 1 auto;
+  width: 100%; /* fill container width instead of forcing viewport width */
+  min-height: calc(100vh - 6vh);
+  height: calc(100vh - 6vh);
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow: auto; /* allow scrolling if widgets exceed view */
+  border: none; /* remove boxed look so it feels full-bleed */
+  border-radius: 0;
+  background: transparent;
+}
+
+.widget { box-sizing: border-box; }
+
+/* baseline widget minimums (smaller so presets control the initial size) */
+.widget { min-width: 160px; min-height: 120px; }
+
+/* Floating Action Button for Add Widget */
+.fab {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  border: none;
+  cursor: pointer;
+  z-index: 4000;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.fab:hover { transform: translateY(-4px); box-shadow: 0 14px 36px rgba(0,0,0,0.45); }
+.fab:active { transform: translateY(-2px); }
+
+/* Small label shown on hover (optional) */
+.fab-label {
+  position: fixed;
+  right: 90px;
+  bottom: 32px;
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  pointer-events: none;
+  z-index: 3999;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+.fab:hover + .fab-label { opacity: 1; }
+
+/* ensure FA icon is centered in the FAB and not affected by other button rules */
+.fab i {
+  display: inline-block;
+  line-height: 1;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+/* remove default .btn padding if accidentally left on element (defensive) */
+.fab.btn { padding: 0 !important; }
+
+/* ---- Clock widget styles ---- */
+.analog-clock {
+  width: 140px;
+  height: 140px;
+  position: relative;
+  margin: 0.25rem auto;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.02), transparent 25%), var(--surface);
+  box-shadow: inset 0 2px 6px rgba(255,255,255,0.02), 0 6px 18px rgba(2,6,23,0.45);
+  border: 1px solid rgba(255,255,255,0.03);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.weather-widget {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:0.2rem;
+}
+.analog-clock .face {
+  width: 90%;
+  height: 90%;
+  position: relative;
+  border-radius: 50%;
+  background: conic-gradient(rgba(0,0,0,0.02), transparent 20%);
+}
+.analog-clock .tick {
+  position: absolute;
+  width: 2px;
+  height: 6px;
+  background: var(--primary-dark);
+  top: 6px;
+  left: 50%;
+  transform-origin: center 60px;
+  opacity: 0.9;
+}
+.analog-clock .hand {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-origin: 50% 100%;
+  transform: translateX(-50%) translateY(-100%) rotate(0deg);
+  border-radius: 2px;
+}
+.analog-clock .hand.hour {
+  width: 6px;
+  height: 36px;
+  background: var(--text);
+  z-index: 3;
+}
+.analog-clock .hand.minute {
+  width: 4px;
+  height: 50px;
+  background: var(--text);
+  opacity: 0.85;
+  z-index: 2;
+}
+.analog-clock .hand.second {
+  width: 2px;
+  height: 56px;
+  background: var(--primary);
+  z-index: 4;
+}
+.digital-clock {
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-top: 0.4rem;
+  color: var(--text);
+}
+
+/* ---- Mini calendar styles ---- */
+.mini-calendar {
+  width: 100%;
+  height: 100%;
+  margin: 0.25rem auto;
+  background: var(--surface);
+  border-radius: 0.6rem;
+  padding: 0.5rem;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.15);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+.mini-calendar .mc-header {
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+  font-weight:700;
+}
+.mini-calendar table {
+  width:100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 0.85rem;
+  flex: 1 1 auto;
+}
+.mini-calendar td {
+  width:14.28%;
+  height: 32px;
+  text-align: center;
+  padding: 0.25rem 0;
+  border-radius: 0.3rem;
+  vertical-align: middle;
+}
+.mini-calendar td.empty {
+  color: rgba(0,0,0,0.2);
+}
+.mini-calendar th {
+  text-align: center;
+  color: var(--text);
+  font-weight: 700;
+  padding: 0.15rem 0;
+}
+.mini-calendar td.today {
+  background: linear-gradient(180deg,var(--primary),var(--primary-dark));
+  color: var(--bg);
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+.mini-calendar .nav-btn {
+  background: none;
+  border: none;
+  color: var(--primary);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .analog-clock { width: 110px; height:110px; }
+  .analog-clock .hand.hour { height: 30px; }
+  .analog-clock .hand.minute { height: 44px; }
+  .analog-clock .hand.second { height: 48px; }
+}
+
+/* =========================
+   Table & Inputs
+========================= */
+.table {
+  flex-grow: 1;
+  background-color: var(--surface);
+  border-radius: 0.8vh;
+  padding: 2vh;
+  width: 100%;
+  overflow-x: auto;
+  border: 0.5vh solid var(--secondary);
+}
+
+.table table {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+  font-size: clamp(1rem, 2vw, 1.5rem);
+}
+
+th,
+td {
+  border: 1px solid var(--border);
+  padding: 8px;
+  text-align: left;
+  word-wrap: break-word;
+}
+
+td input[type="text"] {
+  width: 100%;
+  padding: 1vh 2vw;
+  font-size: inherit;
+  border: 0.3vh solid var(--primary-dark);
+  border-radius: 0.5vh;
+}
+
+/* =========================
+   Delete Modes
+========================= */
+.row-delete-mode tr:hover {
+  outline: 2px solid var(--primary-dark);
+  cursor: pointer;
+}
+
+.column-delete-mode td {
+  cursor: pointer;
+}
+
+.column-delete-mode td.column-hover {
+  position: relative;
+  background-color: rgba(5,112,250,0.15);
+  box-shadow: 0 0 8px 2px rgba(5,112,250,0.6);
+  outline: 2px solid var(--primary-dark);
+  border: none;
+  z-index: 1;
+}
+
+/* =========================
+   Footer
+========================= */
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 95vw;
+  max-width: 1200px;
+  padding: 0.7rem 1.5rem;
+  font-size: 1.1rem;
+  text-align: center;
+  background-color: var(--surface);
+}
+
+/* =========================
+   Popups
+========================= */
+.popup {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--secondary);
+  color: var(--text);
+  padding: 10px 20px;
+  border-radius: 0.5rem;
+  display: none;
+  z-index: 1000;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* Themed modal / popup panels used across the UI */
+.modal-popup {
+  display: none; /* toggled by script via style.display */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+    background: var(--surface);
+    backdrop-filter: blur(4px) saturate(1.05);
+  color: var(--text);
+  border: 1px solid var(--primary);
+  border-radius: 0.6rem;
+  padding: 2.2rem 1rem 1rem; /* increased top padding so top-close won't overlap heading */
+  z-index: 3000;
+  box-shadow: 0 18px 50px rgba(6,10,20,0.55);
+  width: min(92vw, 420px);
+  max-width: 95vw;
+
+  /* improve font rendering and modal typography */
+  @media (prefers-reduced-motion: no-preference) {
+    .modal-popup { will-change: transform, opacity; }
+  }
+}
+
+.modal-popup.small { width: min(86vw, 360px); padding: 1.8rem 0.9rem 1rem; }
+
+.modal-popup h3 {
+  margin: 0;
+  color: var(--text);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+/* modern modal header layout */
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  margin-bottom: 0.7rem;
+}
+.modal-header .mh-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03));
+  border-radius: 8px;
+  color: var(--primary);
+  font-size: 1.05rem;
+}
+
+/* top-right small close button inside modals */
+.modal-top-close {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  background: rgba(0,0,0,0.04);
+  border: none;
+  color: var(--text);
+  font-size: 1.0rem;
+  line-height: 1;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.12s ease, transform 0.08s ease;
+  z-index: 3; /* ensure it's above the accent strip */
+}
+.modal-top-close:hover { background: rgba(0,0,0,0.08); transform: scale(1.03); }
+
+/* entrance animation */
+.modal-popup {
+  transform-origin: center center;
+  animation: modalIn 220ms cubic-bezier(.2,.9,.25,1);
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: translate(-50%, -48%) scale(0.97); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* make toasts prettier (popupMessage) */
+.popup {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-6px);
+  background-color: rgba(0,0,0,0.7);
+  color: var(--bg);
+  padding: 8px 14px;
+  border-radius: 999px;
+  display: none;
+  z-index: 4000;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+.popup.show {
+  display: block;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* small utility button style */
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 0.45rem 0.7rem;
+  border-radius: 0.4rem;
+  cursor: pointer;
+}
+
+/* fields layout inside modals */
+.modal-popup .fields-container { display: flex; flex-direction: column; gap: 0.6rem; }
+.modal-popup .field { display:flex; gap:0.6rem; align-items:center; }
+.modal-popup .field strong { width: 110px; flex-shrink:0; color: var(--text); }
+.modal-popup .field input, .modal-popup .field textarea { flex: 1; }
+
+/* modal body utilities */
+.modal-body p { margin: 0.35rem 0; }
+.modal-body label { display: block; margin-top: 0.35rem; }
+.modal-body .field { align-items: center; }
+
+/* modal-body fields layout: grid for clean label/input alignment */
+.modal-body .fields-container {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 0.5rem 0.9rem;
+  align-items: center;
+}
+.modal-body .fields-container .field { display: contents; }
+.modal-body .fields-container .field > strong { display: block; align-self: center; }
+.modal-body .fields-container input[type="text"],
+.modal-body .fields-container input[type="date"],
+.modal-body .fields-container input[type="time"],
+.modal-body .fields-container select,
+.modal-body .fields-container textarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.45rem;
+  border: 1px solid var(--border);
+  box-sizing: border-box;
+}
+.modal-body .fields-container textarea { min-height: 100px; resize: vertical; }
+
+@media (max-width: 560px) {
+  .modal-body .fields-container { grid-template-columns: 1fr; }
+  .modal-body .fields-container .field { display: flex; gap:0.5rem; flex-direction: column; }
+}
+
+/* subtle accent line at the top of modals */
+.modal-popup::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 6px;
+  border-top-left-radius: 0.6rem;
+  border-top-right-radius: 0.6rem;
+  background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+  z-index: 1; /* sit behind content but above modal background */
+}
+
+/* Recent notes widget */
+.recent-notes-list { display:flex; flex-direction:column; gap:0.45rem; }
+.recent-note-item {
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:0.2rem;
+  width:100%;
+  padding:0.45rem 0.6rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 0.45rem;
+  cursor: pointer;
+}
+.recent-note-item:hover { background: linear-gradient(90deg, rgba(0,0,0,0.02), rgba(0,0,0,0.01)); }
+.rni-title { font-weight:700; color: var(--text); }
+.rni-sub { font-size:0.85rem; color: var(--text); }
+.recent-empty { color: var(--text); }
+
+/* Quotes widget */
+.quote-widget { display:flex; flex-direction:column; gap:0.5rem; align-items:flex-start; padding:0.25rem 0.2rem; }
+.quote-text { font-style: italic; font-size: 0.95rem; color: var(--text); }
+.quote-author { font-size: 0.85rem; color: var(--text); align-self:flex-end; }
+
+/* Tasks widget styles */
+.tasks-widget { display:flex; flex-direction:column; gap:0.5rem; }
+.tasks-list { display:flex; flex-direction:column; gap:0.4rem; max-height:220px; overflow:auto; }
+.task-row { display:flex; gap:0.6rem; align-items:center; padding:0.4rem; border-radius:0.4rem; }
+.task-row input[type="checkbox"] { width:18px; height:18px; }
+.task-text { outline:none; min-height:20px; padding:0.1rem 0.2rem; border-radius:0.25rem; }
+.task-text:empty:before { content: attr(data-placeholder); color: var(--text); }
+.tasks-add input { width:100%; padding:0.45rem 0.6rem; border-radius:0.4rem; border:1px solid var(--border); background:var(--surface); color:var(--text); }
+
+.modal-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+}
+
+
+.modal-options .option-card {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:0.35rem;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02));
+  border: 1px solid rgba(255,255,255,0.03);
+  padding: 0.65rem;
+  border-radius: 0.6rem;
+  min-height: 76px;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.modal-options .option-card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(0,0,0,0.24); }
+.modal-options .option-card i { font-size: 1.25rem; color: var(--primary); }
+.modal-options .option-card span { font-size: 0.9rem; color: var(--text); }
+
+.modal-options button:hover {
+  background: linear-gradient(90deg, rgba(0,0,0,0.03), rgba(0,0,0,0.02));
+  border-color: var(--primary);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-between;
+  margin-top: 0.6rem;
+}
+
+.modal-close {
+  margin-top: 0.8rem;
+  width: 100%;
+  background: var(--primary);
+  color: var(--bg);
+  border: none;
+  padding: 0.5rem 0.6rem;
+  border-radius: 0.4rem;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--bg);
+  border: none;
+  padding: 0.45rem 0.7rem;
+  border-radius: 0.4rem;
+  cursor: pointer;
+}
+
+.btn-danger {
+  background: #fa5050;
+  color: #fff;
+  border: none;
+  padding: 0.45rem 0.7rem;
+  border-radius: 0.4rem;
+  cursor: pointer;
+}
+
+/* Ensure the small floating label follows theme too */
+.fab-label {
+  position: fixed;
+  right: 90px;
+  bottom: 32px;
+  background: var(--surface);
+  color: var(--text);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  pointer-events: none;
+  z-index: 3999;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+.fab:hover + .fab-label { opacity: 1; }
+
+/* Inputs and buttons inside themed modal popups */
+.modal-popup input,
+.modal-popup textarea,
+.modal-popup select {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  margin-top: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background-color: var(--surface);
+  color: var(--text);
+  font-size: 1rem;
+}
+
+/* Buttons inside modal popups get themed styles but individual buttons can override via .btn-primary/.btn-danger/.btn-secondary */
+.modal-popup button {
+  background-color: transparent;
+  color: var(--text);
+  padding: 0.5rem 0.8rem;
+  margin-top: 0.6rem;
+  border-radius: 0.45rem;
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
+.modal-popup button:hover { background-color: rgba(0,0,0,0.04); }
+
+/* =========================
+   Tab Dropdown
+========================= */
+.tab-dropdown {
+  position: relative;
+  margin-left: 1rem;
+}
+
+#tabMenuButton {
+  font-size: 1.5rem;
+  background-color: var(--secondary);
+  color: var(--text);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
+
+#tabMenuButton:hover {
+  background-color: var(--primary);
+  color: var(--bg);
+}
+
+.tab-menu-content {
+  display: flex;
+  flex-direction: column;
+  /* position absolute so the dropdown is positioned relative to the topbar/tab-dropdown parent
+     (fixes incorrect placement on small screens where topbar height changes) */
+  position: absolute;
+  left: 0;
+  top: 100%;
+  background-color: var(--secondary);
+  color: var(--on-secondary);
+  min-width: 180px;
+  border-radius: 0 0.3rem 0.3rem 0;
+  box-shadow: 4px 4px 8px rgba(0,0,0,0.2);
+  z-index: 1000;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: max-height 0.28s ease, opacity 0.28s ease, transform 0.2s ease;
+}
+
+.tab-menu-content.show {
+  max-height: 400px;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.tab-menu-content button {
+  background-color: transparent;
+  color: var(--on-secondary);
+  padding: 0.8rem 1.2rem;
+  text-align: left;
+  width: 100%;
+  font-size: 1rem;
+}
+
+.tab-menu-content button:hover {
+  background-color: var(--primary);
+  color: var(--bg);
+}
+
+/* =========================
+   Calendar
+========================= */
+#calendarSection {
+  width: 95%;
+  max-width: 1200px;
+  margin: 1rem auto;
+  display: none;
+  border: 0.5vh solid var(--secondary);
+  border-radius: 0.8vh;
+  padding: 1rem;
+  background-color: var(--surface);
+}
+
+#calendar {
+  width: 100%;
+  max-height: 80vh;
+  min-height: 50vh;
+  overflow-y: auto;
+  font-size: clamp(0.9rem, 1.2vw, 1.2rem);
+}
+
+.fc-button {
+  border-radius: 0.3rem;
+  background-color: var(--primary-dark);
+  color: var(--text);
+  border: none;
+}
+
+.fc-button:hover {
+  background-color: var(--primary);
+  color: var(--bg);
+}
+
+/* =========================
+   Hover States
+========================= */
+.table table td:hover {
+  background-color: rgba(0,0,0,0.05);
+}
+
+#viewTaskPopup .task-item:hover {
+  background-color: rgba(0,0,0,0.05);
+  cursor: pointer;
+}
+
+/* =========================
+   Theme Selector Wrapper
+========================= */
+.setting {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 1rem;
+  color: var(--text);
+  position: relative; /* add this */
+}
+
+/* Label */
+.setting label {
+  font-weight: 600;
+}
+
+/* Settings controls styling (inputs, selects inside settings) */
+#settingsSection {
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 900px;
+}
+
+#settingsSection .setting {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 0.8rem;
+  border-radius: 0.6rem;
+}
+
+#locationOverrides {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+#locationOverrides input[type="number"],
+#locationOverrides select,
+#locationOverrides input[type="search"] {
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.45rem;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+/* Autocomplete suggestions for location input */
+.location-suggestions {
+  max-height: 220px;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.45rem;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.15);
+}
+.location-suggestions .suggestion {
+  padding: 0.45rem 0.6rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+.location-suggestions .suggestion:hover,
+.location-suggestions .suggestion.active {
+  background: linear-gradient(90deg, rgba(0,0,0,0.03), rgba(0,0,0,0.01));
+}
+
+#overrideTimezone {
+  width: 100%;
+  max-width: 420px;
+}
+
+#overrideTimezoneSearch {
+  flex: 1 1 auto;
+  max-width: 420px;
+}
+
+#overrideCity {
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.45rem;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* make settings look good on small screens */
+@media (max-width: 900px) {
+  #settingsSection { padding: 0.6rem; }
+  #overrideTimezone { max-width: 100%; }
+  #overrideTimezoneSearch { max-width: 100%; }
+}
+
+/* Theme Select */
+#themeSelect {
+  background-color: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.8rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+  width: 200px;
+}
+
+/* =========================
+   Settings form grid for clean alignment
+   ========================= */
+.setting-grid {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 0.6rem 1rem;
+  align-items: center;
+}
+.setting-grid .field {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+.setting-grid .field label {
+  min-width: 160px;
+  font-weight: 600;
+  color: var(--text);
+}
+.autocomplete-wrap { position: relative; width: 100%; }
+.autocomplete-wrap input { width: 100%; padding: 0.45rem 0.6rem; border-radius: 0.45rem; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+.override-panel .helper { color: var(--secondary); font-size: 0.9rem; margin-top: 0.4rem; grid-column: 1 / -1; }
+
+@media (max-width: 900px) {
+  .setting-grid { grid-template-columns: 1fr; }
+  .setting-grid .field label { min-width: 0; width: 34%; }
+  .setting-grid .field { flex-direction: column; align-items: stretch; }
+  .autocomplete-wrap input { font-size: 1rem; }
+}
+
+/* Hover and Focus */
+#themeDropdownButton {
+  padding: 0.6rem 1.2rem; /* bigger padding */
+  min-width: 120px;       /* ensures text fits */
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  background-color: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+#themeDropdownButton:hover {
+  background-color: var(--primary);
+  color: var(--bg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  width: max-content;      /* only as wide as content or button */
+  min-width: 120px;        /* optional, ensure it's not too narrow */
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: max-height 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+  z-index: 1000;
+}
+
+.dropdown-menu.show {
+  max-height: 500px;  /* enough for all options */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.dropdown-menu div {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.dropdown-menu div:hover {
+  background-color: var(--primary);
+  color: var(--bg);
+}
+
+/* =========================
+   Notes UI (sidebar + editor)
+========================= */
+
+/* Notes container */
+.notes-container {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  padding: 0.5rem;       /* small breathing space around the container */
+  gap: 1rem;
+  min-height: calc(100vh - 5vh); /* leave room for topbar */
+  overflow: hidden;
+}
+
+/* Sidebar */
+.notes-sidebar {
+  width: 250px;
+  min-width: 200px;
+  max-height: 100vh;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  padding: 0.75rem;      /* breathing space inside sidebar */
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+}
+
+/* Sidebar header */
+.notes-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.notes-sidebar-header h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+/* Sidebar buttons */
+.notes-actions button {
+  margin-left: 0.4rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.35rem;
+  border: 1px solid var(--border);
+  background: var(--secondary);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: transform 0.12s ease, background-color 0.2s ease;
+}
+
+.notes-actions button:hover {
+  transform: translateY(-2px);
+  background: var(--primary);
+  color: var(--bg);
+}
+
+/* Search input */
+.notes-search input {
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.35rem;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Pages list */
+.pages-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  flex-grow: 1;
+  gap: 0.25rem;
+}
+
+.pages-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.6rem;
+  border-radius: 0.35rem;
+  cursor: pointer;
+  color: var(--text);
+  border: 1px solid transparent;
+  font-size: 0.9rem;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.pages-list li.active {
+  background: linear-gradient(90deg, rgba(0,0,0,0.03), rgba(0,0,0,0.01));
+  border-color: var(--primary);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+}
+
+.pages-list li:hover {
+  background-color: rgba(0,0,0,0.03);
+}
+
+/* Editor wrapper */
+.notes-editor-wrap {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.5rem;               /* breathing space around editor */
+  min-width: 300px;
+  max-width: calc(100% - 270px); /* account for sidebar width + gap (use % to avoid viewport overflow) */
+}
+
+/* Note topbar */
+.note-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.note-title {
+  flex-grow: 1;
+  padding: 0.5rem 0.75rem;
+  font-size: 1.15rem;
+  border-radius: 0.45rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.note-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.last-saved {
+  font-size: 0.85rem;
+  color: var(--text);
+}
+
+/* Editor content */
+.notes-editor {
+  flex-grow: 1;
+  padding: 1.25rem;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  min-height: calc(100vh - 20vh);
+  max-height: calc(100vh - 12vh);
+  overflow-y: auto;
+  font-size: 1rem;
+  line-height: 1.6;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#commandPopup div:hover {
+  background: var(--hover-bg, #eef);
+}
+
+/* Small screens */
+@media (max-width: 900px) {
+  .notes-container { flex-direction: column; width: 95%; }
+  .notes-sidebar { width: 100%; display:flex; flex-direction:row; gap:0.5rem; overflow:auto; padding:0.4rem; }
+  .pages-list { display:flex; gap:0.4rem; flex-direction:row; }
+  .notes-editor { min-height: 50vh; }
+}
+
+/* Delete confirmation popup */
+#deleteConfirmPopup {
+  display: none;
+  position: fixed;
+  top: 20px;           /* distance from top */
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface);
+  padding: 0.8rem 1.2rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  text-align: center;
+  z-index: 2000;
+  width: auto;         /* shrink to content */
+  max-width: 300px;    /* optional max width */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+#deleteConfirmPopup .popup-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+#deleteConfirmPopup button {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  transition: background 0.3s, opacity 0.3s;
+  font-size: 0.9rem;
+}
+
+#deleteConfirmPopup button:first-child {
+  background: crimson;
+  color: white;
+}
+
+#deleteConfirmPopup button:last-child {
+  background: var(--border);
+  color: var(--text);
+}
+
+#deleteConfirmPopup button:hover {
+  opacity: 0.85;
+}
+
+/* Notes Config */
+.notes-config-dropdown {
+  position: relative;
+  display: inline-block;
+  margin-left: 0.5rem;
+}
+
+#configButton {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 0.4rem;
+  background-color: var(--secondary);
+  color: var(--text);
+  cursor: pointer;
+}
+
+#configButton:hover {
+  background-color: var(--primary);
+  color: var(--bg);
+}
+
+.config-menu {
+  display: none;
+  position: absolute;
+  top: 100%; 
+  right: 0;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  min-width: 200px;
+  z-index: 1000;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.config-menu div {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+}
+
+.notes-config-dropdown.show .config-menu {
+  display: flex;
+}
+
+.notes-dropdown {
+  position: relative;
+  display: inline-block;
+  margin-left: 0.5rem;
+}
+
+.notes-dropdown button {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.notes-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  min-width: 180px;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: all 0.25s ease;
+  z-index: 1000;
+  padding: 0.5rem 0;
+}
+
+.notes-dropdown-menu.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.notes-dropdown-menu .dropdown-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+.notes-dropdown-menu .dropdown-item label {
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+.notes-dropdown-menu input,
+.notes-dropdown-menu select {
+  flex: 1;
+  border: 1px solid var(--border);
+  border-radius: 0.3rem;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.85rem;
+}
+
+/* ==== Reminders =====*/ 
+.reminder-popup {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: var(--primary);
+  color: var(--bg);
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  z-index: 5000;
+  animation: fadein 0.3s, fadeout 0.3s 4.7s;
+}
+
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeout {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(10px); }
+}
+
+/* =========================
+   Responsive
+========================= */
+@media (max-width: 900px) {
+  /* rely on the clamp() base font-size; avoid switching to vw-based sizing which can be inconsistent */
+
+  .content-wrapper {
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .sidebar {
+    width: 90%;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  .topbar {
+    flex-direction: column;
+    height: auto;
+    padding: 0.6rem 1rem;
+  }
+
+  .tab-buttons {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  td input[type="text"] {
+    font-size: 1rem;
+  }
+}
+
+/* Tweak FAB for small screens so it doesn't overlap edge controls */
+@media (max-width: 560px) {
+  .fab {
+    right: 14px;
+    bottom: 14px;
+    width: 48px;
+    height: 48px;
+    font-size: 1.1rem;
+  }
+  .fab-label { right: 70px; bottom: 20px; }
+}
+/* =========================
+   Theme Variables
+========================= */
+:root[data-theme="light"] {
+  --bg: #ffffff;
+  --text: #0b1220; /* stronger dark text for contrast */
+  --surface: #f6f7f9; /* slightly off-white for subtle depth */
+  --border: #d7dbe0;
+  --primary: #0077b6;
+  --primary-dark: #005fa3;
+  --secondary: #2b3138; /* more legible secondary */
+  --on-primary: #ffffff; /* text color to use on primary backgrounds */
+  --on-secondary: #ffffff; /* text color to use on secondary backgrounds */
+}
+
+:root[data-theme="dark"] {
+  --bg: #0f1424;
+  --text: #ffffff; /* full white for max contrast */
+  --surface: #121521; /* darker surface for better contrast with white text */
+  --border: #202335;
+  --primary: #58a6ff;
+  --primary-dark: #2f82ff;
+  --secondary: #b9c0d6; /* lighter secondary for readable meta text */
+  --on-primary: #0f1424;
+  --on-secondary: #0f1424;
+}
+
+:root[data-theme="sunset"] {
+  --bg: #2b1b3d;
+  --text: #fffaf0; /* warmer but still high-contrast */
+  --surface: #3a213f;
+  --border: #5a2c61;
+  --primary: #ff6b6b;
+  --primary-dark: #e24b59;
+  --secondary: #ffd6a5; /* readable accent for secondary text */
+  --on-primary: #2b1b3d;
+  --on-secondary: #2b1b3d;
+}
+
+:root[data-theme="mint"] {
+  --bg: #e6f7f1;
+  --text: #052f2c; /* darker, improved legibility */
+  --surface: #dff4ee;
+  --border: #9ad3c7;
+  --primary: #00b894;
+  --primary-dark: #008f7a;
+  --secondary: #0a5a56;
+  --on-primary: #ffffff;
+  --on-secondary: #ffffff;
+}
+
+:root[data-theme="lavender"] {
+  --bg: #f3f0ff;
+  --text: #2b1050; /* keep deep purple but ensure contrast */
+  --surface: #ece9ff;
+  --border: #c6b7ff;
+  --primary: #805ef7;
+  --primary-dark: #5f3dc4;
+  --secondary: #4b2995;
+  --on-primary: #ffffff;
+  --on-secondary: #ffffff;
+}
+
+:root[data-theme="peach"] {
+  --bg: #fff5f0;
+  --text: #3e1500; /* slightly darker for clarity */
+  --surface: #ffefea;
+  --border: #ffc5ad;
+  --primary: #ff6b35;
+  --primary-dark: #e85d04;
+  --secondary: #9a3b00;
+  --on-primary: #ffffff;
+  --on-secondary: #ffffff;
+}
+
+/* =========================
+   Reset & Base
+========================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+<<<<<<< HEAD
+  font-size: 1.5vw;
+=======
+  /* Use a stable, responsive base font-size: clamp keeps it readable on phones and desktops */
+  font-size: clamp(14px, 1.2vw, 18px);
+>>>>>>> 65f89c7 (Initial commit: project files and .gitignore)
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+button,
+.btn {
+  border: none;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+}
+
+button:hover,
+.btn:hover {
+  background-color: var(--primary);
+  color: var(--bg);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* =========================
+   Topbar
+========================= */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+<<<<<<< HEAD
+  width: 100vw;
+  height: 5vh;
+  background-color: var(--secondary);
+  color: var(--text);
+  padding: 0.5vh 1vw;
+  font-size: 1.2vw;
+=======
+  width: 100%; /* prefer percent so scrollbars don't cause overflow */
+  height: auto; /* allow content to define height on small screens */
+  background-color: var(--secondary);
+  color: var(--text);
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+>>>>>>> 65f89c7 (Initial commit: project files and .gitignore)
+  position: relative;
+}
+
+.topbar button {
+  background-color: var(--primary-dark);
+  color: var(--text);
+  padding: 0.5vh 1vw;
+  font-size: 1vw;
+}
+
+.topbar button:hover {
+  background-color: var(--primary);
+  color: var(--bg);
+}
+
+/* =========================
+   Tab Buttons
+========================= */
+.tab-buttons {
+  display: flex;
+  gap: 0.5vw;
+}
+
+.tab-buttons button {
+  background-color: var(--secondary);
+  color: var(--on-secondary);
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+}
+
+.tab-buttons button.active {
+  background-color: var(--primary);
+  color: var(--bg);
+}
+
+.tab-buttons button:hover {
+  box-shadow: 0 0 12px 2px var(--primary);
+}
+
+/* =========================
+   Layout & Planner
+========================= */
+.content-wrapper {
+  display: flex;
+  flex-direction: row;
+<<<<<<< HEAD
+  gap: 1vw;
+  width: 100vw; /* allow full-bleed dashboard */
+=======
+  gap: 1rem;
+  width: 100%; /* avoid viewport-width issues on mobile */
+>>>>>>> 65f89c7 (Initial commit: project files and .gitignore)
+  flex-grow: 1;
+  align-items: stretch;
+}
+
+.planner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1vh;
+  padding: 1vh 1vw;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* =========================
+   Sidebar & Buttons
+========================= */
+.sidebar {
+  /* hide old sidebar container to avoid leftover placeholders */
+  display: none !important;
+}
+
+.btn {
+  margin-bottom: 0.5rem;
+  background-color: var(--primary);
+  color: var(--on-primary);
+  font-size: 1.1rem;
+  padding: 0.7rem 1.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 50px;
+  height: 40px;
+}
+
+/* Theme Selector Styling */
+#themeSelector {
+  margin-top: 1rem;
+  background-color: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+}
+
+#themeSelector:hover {
+  background-color: var(--primary);
+  color: var(--bg);
+}
+
+/* Widgets Container */
+.widgets-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+  height: calc(100vh - 50px); /* adjust based on header/footer */
+  overflow-y: auto;
+}
+
+/* Individual Widget */
+.widget {
+  /* modern card style for widgets */
+  border-radius: 0.8rem;
+  padding: 0.6rem 0.75rem;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+  color: var(--text);
+  border: 1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 6px 18px rgba(2,6,23,0.45), inset 0 1px 0 rgba(255,255,255,0.02);
+  cursor: grab;
+  overflow: hidden;
+  transition: transform 0.18s cubic-bezier(.2,.8,.2,1), box-shadow 0.18s ease, border-color 0.18s ease;
+}
+.widget-theme-dark {
+  background: linear-gradient(180deg, rgba(0,0,0,0.95), rgba(0,0,0,0.9));
+  color: #ffffff; /* force white text for dark widget theme */
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.widget-theme-light {
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(250,250,250,0.95));
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+/* Ensure dark-themed widgets show white text by default and override inline color styles
+   (use !important to out-priority inline styles that use CSS variables). Keep calendar as an exception below. */
+.widget-theme-dark,
+.widget-theme-dark .widget,
+.widget-theme-dark .widget-body,
+.widget-theme-dark * {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* Calendar inside a dark-themed widget should remain readable: give it a light surface and dark text */
+.widget-theme-dark .mini-calendar {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #e6e6e6 !important;
+}
+.widget-theme-dark .mini-calendar th,
+.widget-theme-dark .mini-calendar td,
+.widget-theme-dark .mini-calendar .mc-title,
+.widget-theme-dark .mini-calendar .mc-header {
+  color: #000000 !important;
+}
+.widget-theme-dark .mini-calendar td.empty { color: rgba(0,0,0,0.35) !important; }
+.widget-theme-dark .mini-calendar .today { color: #ffffff !important; }
+.widget:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(2,6,23,0.55);
+  border-color: rgba(0,123,255,0.22);
+}
+
+.widget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.35rem 0.45rem;
+  background: linear-gradient(90deg, rgba(0,0,0,0.06), transparent);
+  border-radius: 0.6rem;
+  font-weight: 700;
+  color: inherit;
+  margin-bottom: 0.45rem;
+}
+
+.widget-body {
+  font-size: 0.95rem;
+  line-height: 1.35;
+  padding: 0.45rem 0.35rem;
+  color: inherit;
+  min-height: 48px;
+  display: block;
+}
+
+/* Ensure widget content is usable when small and allow flexible filling */
+.widget {
+  min-width: 160px;
+  min-height: 120px;
+}
+.widget-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+/* make children expand if needed */
+.widget-body > * {
+  flex: 0 0 auto;
+}
+
+/* Widget Title */
+.widget-title {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+/* Widget Controls */
+.widget-controls button {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-left: 0.3rem;
+}
+
+/* Widget Content */
+.widget-content {
+  flex: 1;
+  font-size: 0.9rem;
+  overflow-wrap: break-word;
+}
+
+.widget .widget-header {
+  cursor: move;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.widget .resize-handle {
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(180deg,var(--primary),var(--primary-dark));
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  cursor: se-resize;
+  border-radius: 3px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+}
+
+/* Dashboard container: position relative so absolutely positioned widgets are contained */
+#dashboard {
+  position: relative;
+  flex: 1 1 auto;
+<<<<<<< HEAD
   width: 100vw; /* use full viewport width */
+=======
+  width: 100%; /* fill container width instead of forcing viewport width */
+>>>>>>> 65f89c7 (Initial commit: project files and .gitignore)
   min-height: calc(100vh - 6vh);
   height: calc(100vh - 6vh);
   padding: 1rem;
@@ -1011,9 +2879,17 @@ td input[type="text"] {
 .tab-menu-content {
   display: flex;
   flex-direction: column;
+<<<<<<< HEAD
   position: fixed;
   left: 0;
   top: 5vh;
+=======
+  /* position absolute so the dropdown is positioned relative to the topbar/tab-dropdown parent
+     (fixes incorrect placement on small screens where topbar height changes) */
+  position: absolute;
+  left: 0;
+  top: 100%;
+>>>>>>> 65f89c7 (Initial commit: project files and .gitignore)
   background-color: var(--secondary);
   color: var(--on-secondary);
   min-width: 180px;
@@ -1023,8 +2899,13 @@ td input[type="text"] {
   overflow: hidden;
   max-height: 0;
   opacity: 0;
+<<<<<<< HEAD
   transform: translateX(-10px);
   transition: max-height 0.4s ease, opacity 0.4s ease, transform 0.3s ease;
+=======
+  transform: translateX(-6px);
+  transition: max-height 0.28s ease, opacity 0.28s ease, transform 0.2s ease;
+>>>>>>> 65f89c7 (Initial commit: project files and .gitignore)
 }
 
 .tab-menu-content.show {
@@ -1291,7 +3172,11 @@ td input[type="text"] {
 /* Notes container */
 .notes-container {
   display: flex;
+<<<<<<< HEAD
   width: 100vw;
+=======
+  width: 100%;
+>>>>>>> 65f89c7 (Initial commit: project files and .gitignore)
   max-width: 100%;
   padding: 0.5rem;       /* small breathing space around the container */
   gap: 1rem;
@@ -1406,7 +3291,11 @@ td input[type="text"] {
   gap: 0.6rem;
   padding: 0.5rem;               /* breathing space around editor */
   min-width: 300px;
+<<<<<<< HEAD
   max-width: calc(100vw - 270px); /* account for sidebar width + gap */
+=======
+  max-width: calc(100% - 270px); /* account for sidebar width + gap (use % to avoid viewport overflow) */
+>>>>>>> 65f89c7 (Initial commit: project files and .gitignore)
 }
 
 /* Note topbar */
@@ -1461,7 +3350,11 @@ td input[type="text"] {
 
 /* Small screens */
 @media (max-width: 900px) {
+<<<<<<< HEAD
   .notes-container { flex-direction: column; width: 95vw; }
+=======
+  .notes-container { flex-direction: column; width: 95%; }
+>>>>>>> 65f89c7 (Initial commit: project files and .gitignore)
   .notes-sidebar { width: 100%; display:flex; flex-direction:row; gap:0.5rem; overflow:auto; padding:0.4rem; }
   .pages-list { display:flex; gap:0.4rem; flex-direction:row; }
   .notes-editor { min-height: 50vh; }
@@ -1652,6 +3545,7 @@ td input[type="text"] {
    Responsive
 ========================= */
 @media (max-width: 900px) {
+<<<<<<< HEAD
   body {
     font-size: 2vw;
   }
@@ -1663,6 +3557,17 @@ td input[type="text"] {
 
   .sidebar {
     width: 90vw;
+=======
+  /* rely on the clamp() base font-size; avoid switching to vw-based sizing which can be inconsistent */
+
+  .content-wrapper {
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .sidebar {
+    width: 90%;
+>>>>>>> 65f89c7 (Initial commit: project files and .gitignore)
     flex-direction: row;
     justify-content: space-around;
   }
@@ -1670,7 +3575,11 @@ td input[type="text"] {
   .topbar {
     flex-direction: column;
     height: auto;
+<<<<<<< HEAD
     padding: 1vh 1vw;
+=======
+    padding: 0.6rem 1rem;
+>>>>>>> 65f89c7 (Initial commit: project files and .gitignore)
   }
 
   .tab-buttons {
@@ -1679,7 +3588,26 @@ td input[type="text"] {
   }
 
   td input[type="text"] {
+<<<<<<< HEAD
     font-size: 1.5vw;
   }
 }
 
+=======
+    font-size: 1rem;
+  }
+}
+
+/* Tweak FAB for small screens so it doesn't overlap edge controls */
+@media (max-width: 560px) {
+  .fab {
+    right: 14px;
+    bottom: 14px;
+    width: 48px;
+    height: 48px;
+    font-size: 1.1rem;
+  }
+  .fab-label { right: 70px; bottom: 20px; }
+}
+
+>>>>>>> 65f89c7 (Initial commit: project files and .gitignore)

@@ -1,0 +1,11 @@
+# Project .gitignore
+node_modules/
+.env
+.DS_Store
+*.mkv
+*.mp4
+dist/
+build/
+.vscode/
+AUTOPUSH.md
+watch-and-push.js

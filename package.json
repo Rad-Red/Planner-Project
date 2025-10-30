@@ -1,0 +1,11 @@
+{
+  "name": "planner-project",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "auto-push": "node watch-and-push.js"
+  },
+  "dependencies": {
+    "chokidar": "^3.5.3"
+  }
+}
