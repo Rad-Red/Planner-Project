@@ -1887,6 +1887,21 @@ td input[type="text"] {
   .tab-menu-content { left: 8px; right: auto; }
 }
 
+/* Force the dropdown panel to be viewport-flush on small and narrow screens.
+   Use fixed positioning so it sits against page borders regardless of parent layout. */
+@media (max-width: 900px) {
+  .tab-menu-content {
+    position: fixed !important;
+    left: env(safe-area-inset-left, 0px) !important;
+    right: env(safe-area-inset-right, 0px) !important;
+    width: calc(100% - (env(safe-area-inset-left, 0px) + env(safe-area-inset-right, 0px))) !important;
+    /* keep it under the topbar; approximate using safe-area + a small offset */
+    top: calc(env(safe-area-inset-top, 0px) + 48px) !important;
+    border-radius: 0 !important;
+    min-width: 0 !important;
+  }
+}
+
 /* Stronger anchoring for the hamburger/menu on narrow screens */
 @media (max-width: 900px) {
   .topbar { position: relative; min-height: 56px; }
