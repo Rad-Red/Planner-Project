@@ -1920,7 +1920,7 @@ td input[type="text"] {
   }
   .tab-dropdown {
     position: absolute !important;
-    left: 2px !important; /* match button left offset */
+    left: env(safe-area-inset-left, 0px) !important; /* flush to the viewport safe-area left edge */
     right: auto !important;
     /* place dropdown directly beneath the button: button top (-14px) + approx button height (40px) = env + 26px */
     top: calc(env(safe-area-inset-top, 0px) + 26px) !important; /* dropdown below button */
@@ -1929,6 +1929,13 @@ td input[type="text"] {
   }
   /* keep padding so content doesn't overlap the button */
   .topbar { padding-left: 64px; }
+
+  /* Make the dropdown panel itself flush to the left edge of the viewport (respect safe area) */
+  .tab-menu-content {
+    left: env(safe-area-inset-left, 0px) !important;
+    right: auto !important;
+    max-width: calc(100% - 12px) !important; /* keep a small right gutter */
+  }
 }
 
 /* FullCalendar mobile toolbar: avoid overlapping buttons and allow wrapping */
