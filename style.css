@@ -1907,21 +1907,23 @@ td input[type="text"] {
    the topbar rather than staying fixed to the viewport. This preserves the expected behavior. */
 @media (max-width: 560px) {
   .topbar { position: relative; }
+  /* place the hamburger slightly higher and more left to avoid overflowing the topbar */
   #tabMenuButton {
     position: absolute !important;
-    left: 12px !important;
+    left: 8px !important;
     right: auto !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
+    /* use safe-area inset so it won't collide with device notch/status bar */
+    top: calc(env(safe-area-inset-top, 6px) + 6px) !important;
+    transform: none !important;
     margin: 0 !important;
     z-index: 2500 !important;
   }
   .tab-dropdown {
     position: absolute !important;
-    left: 12px !important;
+    left: 8px !important;
     right: auto !important;
-    top: 100% !important;
-    transform: translateY(6px) !important;
+    top: calc(env(safe-area-inset-top, 6px) + 46px) !important; /* dropdown below button */
+    transform: none !important;
     z-index: 2499 !important;
   }
   /* keep padding so content doesn't overlap the button */
