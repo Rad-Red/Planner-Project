@@ -15,6 +15,22 @@
   --secondary: #2b3138;
 }
 
+/* On wider screens, make the dropdown panel flush to the page borders as well.
+   This only affects the dropdown panel (`.tab-menu-content`) and uses a fixed
+   position so it anchors to the viewport edges. */
+@media (min-width: 901px) {
+  .tab-menu-content {
+    position: fixed !important;
+    left: env(safe-area-inset-left, 0px) !important;
+    right: env(safe-area-inset-right, 0px) !important;
+    width: calc(100% - (env(safe-area-inset-left, 0px) + env(safe-area-inset-right, 0px))) !important;
+    top: calc(var(--topbar-height, 56px)) !important; /* position under topbar */
+    border-radius: 0 !important;
+    min-width: 0 !important;
+    z-index: 9999 !important;
+  }
+}
+
 *,
 *::before,
 *::after { box-sizing: border-box; }
