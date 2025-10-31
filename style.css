@@ -1158,25 +1158,26 @@ td input[type="text"] {
   cursor: pointer;
 }
 
-#tabMenuButton:hover {
-  background-color: var(--primary);
-  color: var(--bg);
-}
-
-.tab-menu-content {
-  display: flex;
-  flex-direction: column;
-  /* position absolute so the dropdown is positioned relative to the topbar/tab-dropdown parent
-     (fixes incorrect placement on small screens where topbar height changes) */
-  position: absolute;
-  left: 0;
-  top: 100%;
-  background-color: var(--secondary);
-  color: var(--on-secondary);
-  min-width: 180px;
-  border-radius: 0 0.3rem 0.3rem 0;
-  box-shadow: 4px 4px 8px rgba(0,0,0,0.2);
-  z-index: 1000;
+  #tabMenuButton {
+    position: absolute !important;
+    left: 2px !important;
+    right: auto !important;
+    /* move the button slightly down from the safe-area baseline */
+    top: calc(env(safe-area-inset-top, 0px) - 14px) !important;
+    transform: none !important;
+    margin: 0 !important;
+    z-index: 2500 !important;
+  }
+  /* Make the dropdown anchor and panel fixed so the panel can be flush to the viewport left edge */
+  .tab-dropdown {
+    position: fixed !important;
+    left: env(safe-area-inset-left, 0px) !important; /* flush to viewport left (safe-area aware) */
+    right: auto !important;
+    /* place dropdown directly beneath the button: approx safe-area + 26px */
+    top: calc(env(safe-area-inset-top, 0px) + 26px) !important;
+    transform: none !important;
+    z-index: 2499 !important;
+  }
   overflow: hidden;
   max-height: 0;
   opacity: 0;
