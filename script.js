@@ -623,12 +623,24 @@ function openActivePage() {
   notesEditor.innerHTML = "";
   // ensure page.blocks exists
   if (!Array.isArray(page.blocks)) page.blocks = [{ id: 'b' + Date.now(), type: 'p', html: '' }];
-  page.blocks.forEach(block => {
+    page.blocks.forEach(block => {
     const div = document.createElement('div');
     div.className = 'note-block note-block-' + (block.type || 'p');
     div.setAttribute('contenteditable', 'true');
     div.dataset.blockId = block.id;
     div.innerHTML = block.html || '';
+
+    // add drag handle
+    const handle = document.createElement('div');
+    handle.className = 'note-block-handle';
+    handle.title = 'Drag to reorder';
+    handle.innerHTML = '⠿';
+    handle.style.display = 'inline-block';
+    handle.style.width = '1.6rem';
+    handle.style.marginRight = '0.5rem';
+    handle.style.cursor = 'grab';
+    div.prepend(handle);
+
     // input handler — update block html and schedule save
     div.addEventListener('input', (e) => {
       try {
@@ -639,34 +651,55 @@ function openActivePage() {
         scheduleSave(800);
       } catch (err) { console.error(err); }
     });
-    // key handling: Enter to insert new block, Backspace at start to merge with previous
+
+    // key handling: Enter to split block, Backspace at start to merge with previous
     div.addEventListener('keydown', (e) => {
       const sel = window.getSelection();
       if (!sel.rangeCount) return;
-      // Ctrl/Cmd+S handled elsewhere
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-        // create a new empty paragraph block after this one
+        // split current block at caret
+        const rightHtml = splitBlockAtSelection(div) || '';
         const pg = pages.find(p => p.id === activePageId);
         if (!pg) return;
         const idx = pg.blocks.findIndex(x => x.id === div.dataset.blockId);
-        const newBlock = { id: 'b' + Date.now(), type: 'p', html: '' };
+        const newBlock = { id: 'b' + Date.now(), type: 'p', html: rightHtml };
         pg.blocks.splice(idx + 1, 0, newBlock);
         // render new block DOM after this div
         const newDiv = document.createElement('div');
         newDiv.className = 'note-block note-block-p';
         newDiv.setAttribute('contenteditable', 'true');
         newDiv.dataset.blockId = newBlock.id;
-        newDiv.innerHTML = '';
-        // attach same listeners by reusing this function's logic via dispatch
+        newDiv.innerHTML = newBlock.html || '';
+        // add handle and listeners
+        const newHandle = document.createElement('div');
+        newHandle.className = 'note-block-handle';
+        newHandle.title = 'Drag to reorder';
+        newHandle.innerHTML = '⠿';
+        newHandle.style.display = 'inline-block';
+        newHandle.style.width = '1.6rem';
+        newHandle.style.marginRight = '0.5rem';
+        newHandle.style.cursor = 'grab';
+        newDiv.prepend(newHandle);
         div.parentNode.insertBefore(newDiv, div.nextSibling);
+        // wire listeners for the new block (reuse minimal handlers)
+        newDiv.addEventListener('input', () => {
+          const pg2 = pages.find(p => p.id === activePageId);
+          if (!pg2) return;
+          const b2 = pg2.blocks.find(x => x.id === newDiv.dataset.blockId);
+          if (b2) b2.html = newDiv.innerHTML;
+          scheduleSave(800);
+        });
+        newDiv.addEventListener('keydown', (ev) => {
+          // small handler for merging/backspace will be covered by initial load logic
+        });
+        // enable DnD on both
+        enableBlockDnD(div);
+        enableBlockDnD(newDiv);
         // focus new block
-        setTimeout(() => {
-          newDiv.focus();
-        }, 20);
+        setTimeout(() => { placeCaretAtStart(newDiv); }, 20);
         scheduleSave(200);
       } else if (e.key === 'Backspace') {
-        // if caret at start and block is empty or caret at 0 and no content before, merge with previous
         const range = sel.getRangeAt(0);
         if (range.startOffset === 0 && range.endOffset === 0) {
           const pg = pages.find(p => p.id === activePageId);
@@ -674,21 +707,13 @@ function openActivePage() {
           const idx = pg.blocks.findIndex(x => x.id === div.dataset.blockId);
           if (idx > 0) {
             const prev = notesEditor.querySelector(`[data-block-id="${pg.blocks[idx-1].id}"]`);
-            // merge current html into previous
             pg.blocks[idx-1].html = (pg.blocks[idx-1].html || '') + (div.innerHTML || '');
-            // remove current block from model and DOM
             pg.blocks.splice(idx,1);
             const toRemove = div;
             setTimeout(() => {
               if (prev) {
                 prev.focus();
-                // place caret at end
-                const r = document.createRange();
-                r.selectNodeContents(prev);
-                r.collapse(false);
-                const s = window.getSelection();
-                s.removeAllRanges();
-                s.addRange(r);
+                placeCaretAtEnd(prev);
               }
               toRemove.remove();
               scheduleSave(200);
@@ -700,6 +725,8 @@ function openActivePage() {
     });
 
     notesEditor.appendChild(div);
+    // enable DnD
+    enableBlockDnD(div);
   });
   lastSavedEl && (lastSavedEl.textContent = page.updated ? `Saved ${new Date(page.updated).toLocaleString()}` : "Unsaved");
   // Apply per-page editor settings (e.g., text color). Fall back to global settings.
@@ -1156,15 +1183,126 @@ function applyBlockFormat(tag) {
   sel.addRange(r2);
 }
 
+/* ===== Block editor helpers ===== */
+function getBlockElementFromSelection() {
+  const sel = window.getSelection();
+  if (!sel.rangeCount) return null;
+  let node = sel.anchorNode;
+  while (node && node !== notesEditor && node.nodeType !== 1) node = node.parentNode;
+  if (!node || node === notesEditor) return null;
+  // climb until direct child of notesEditor (a block)
+  while (node && node.parentNode && node.parentNode !== notesEditor) node = node.parentNode;
+  return node && node.parentNode === notesEditor ? node : null;
+}
+
+function changeBlockType(blockId, newType) {
+  const page = pages.find(p => p.id === activePageId);
+  if (!page) return;
+  const blk = page.blocks.find(b => b.id === blockId);
+  if (!blk) return;
+  blk.type = newType;
+  // update DOM if present
+  const el = notesEditor.querySelector(`[data-block-id="${blockId}"]`);
+  if (el) {
+    el.className = 'note-block note-block-' + newType;
+    // keep html as-is; some types like code may wrap in <code> later via formatting commands
+  }
+  scheduleSave(200);
+}
+
+function splitBlockAtSelection(blockEl) {
+  const sel = window.getSelection();
+  if (!sel.rangeCount) return null;
+  const range = sel.getRangeAt(0);
+  // ensure selection is inside blockEl
+  if (!blockEl.contains(range.startContainer)) return null;
+
+  // Create a range that spans from caret to the end of blockEl
+  const endRange = document.createRange();
+  endRange.setStart(range.endContainer, range.endOffset);
+  endRange.setEndAfter(blockEl);
+  // Extract the contents after the caret
+  const extracted = endRange.extractContents();
+  const wrapper = document.createElement('div');
+  wrapper.appendChild(extracted);
+  const rightHtml = wrapper.innerHTML;
+
+  // left side remains in blockEl (because we extracted the rest)
+  return rightHtml;
+}
+
+function placeCaretAtStart(el) {
+  el.focus();
+  const r = document.createRange();
+  r.selectNodeContents(el);
+  r.collapse(true);
+  const s = window.getSelection();
+  s.removeAllRanges();
+  s.addRange(r);
+}
+
+function placeCaretAtEnd(el) {
+  el.focus();
+  const r = document.createRange();
+  r.selectNodeContents(el);
+  r.collapse(false);
+  const s = window.getSelection();
+  s.removeAllRanges();
+  s.addRange(r);
+}
+
+/* Drag & drop reorder for blocks */
+function enableBlockDnD(blockEl) {
+  const handle = blockEl.querySelector('.note-block-handle');
+  if (!handle) return;
+  handle.setAttribute('draggable', 'true');
+  handle.addEventListener('dragstart', (ev) => {
+    ev.dataTransfer.setData('text/plain', blockEl.dataset.blockId);
+    ev.dataTransfer.effectAllowed = 'move';
+    blockEl.classList.add('dragging');
+  });
+  handle.addEventListener('dragend', (ev) => {
+    blockEl.classList.remove('dragging');
+  });
+  blockEl.addEventListener('dragover', (ev) => {
+    ev.preventDefault();
+  });
+  blockEl.addEventListener('drop', (ev) => {
+    ev.preventDefault();
+    const srcId = ev.dataTransfer.getData('text/plain');
+    const tgtId = blockEl.dataset.blockId;
+    if (!srcId || srcId === tgtId) return;
+    const pg = pages.find(p => p.id === activePageId);
+    if (!pg) return;
+    const srcIdx = pg.blocks.findIndex(b => b.id === srcId);
+    const tgtIdx = pg.blocks.findIndex(b => b.id === tgtId);
+    if (srcIdx === -1 || tgtIdx === -1) return;
+    const [moving] = pg.blocks.splice(srcIdx,1);
+    // insert before target
+    const insertAt = srcIdx < tgtIdx ? tgtIdx : tgtIdx;
+    pg.blocks.splice(insertAt,0,moving);
+    // reorder DOM
+    const srcEl = notesEditor.querySelector(`[data-block-id="${srcId}"]`);
+    const tgtEl = blockEl;
+    if (srcEl && tgtEl) {
+      notesEditor.insertBefore(srcEl, tgtEl);
+    }
+    scheduleSave(200);
+  });
+}
+
 const commands = [
   { name: 'Insert Date', action: () => insertAtCursor(new Date().toLocaleDateString()) },
   { name: 'Insert Time', action: () => insertAtCursor(new Date().toLocaleTimeString()) },
   { name: 'Bold', action: () => applyInlineFormat('strong') },
   { name: 'Italic', action: () => applyInlineFormat('em') },
   { name: 'Underline', action: () => applyInlineFormat('u') },
-  { name: 'Heading 1', action: () => applyBlockFormat('h1') },
-  { name: 'Heading 2', action: () => applyBlockFormat('h2') },
-  { name: 'Heading 3', action: () => applyBlockFormat('h3') },
+  { name: 'Heading 1', action: () => {
+      const el = getBlockElementFromSelection(); if (!el) return; changeBlockType(el.dataset.blockId, 'h1'); }, },
+  { name: 'Heading 2', action: () => { const el = getBlockElementFromSelection(); if (!el) return; changeBlockType(el.dataset.blockId, 'h2'); }, },
+  { name: 'Heading 3', action: () => { const el = getBlockElementFromSelection(); if (!el) return; changeBlockType(el.dataset.blockId, 'h3'); }, },
+  { name: 'Code block', action: () => { const el = getBlockElementFromSelection(); if (!el) return; changeBlockType(el.dataset.blockId, 'code'); }, },
+  { name: 'Toggle To-do', action: () => { const el = getBlockElementFromSelection(); if (!el) return; changeBlockType(el.dataset.blockId, 'todo'); }, },
   { name: 'New Line', action: () => insertAtCursor('\n') },
 ];
 
