@@ -1086,6 +1086,13 @@ function applyInlineFormat(tag) {
   }
 }
 
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/[&<>\"]/g, function (s) {
+    return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s]);
+  });
+}
+
 function getWordRangeBeforeCaret() {
   const sel = window.getSelection();
   if (!sel.rangeCount) return null;
@@ -1201,11 +1208,64 @@ function changeBlockType(blockId, newType) {
   const blk = page.blocks.find(b => b.id === blockId);
   if (!blk) return;
   blk.type = newType;
+  // transform block.html depending on type for clearer semantics
+  const currentHtml = blk.html || '';
+  if (newType === 'code') {
+    // wrap in pre/code
+    // preserve inner text (strip outer tags)
+    const text = stripHtml(currentHtml) || '';
+    blk.html = '<pre><code>' + escapeHtml(text) + '</code></pre>';
+  } else if (newType === 'quote') {
+    blk.html = '<blockquote>' + currentHtml + '</blockquote>';
+  } else if (newType === 'ul') {
+    const item = stripHtml(currentHtml) || '';
+    blk.html = '<ul><li>' + escapeHtml(item) + '</li></ul>';
+  } else if (newType === 'ol') {
+    const item = stripHtml(currentHtml) || '';
+    blk.html = '<ol><li>' + escapeHtml(item) + '</li></ol>';
+  } else if (newType === 'todo') {
+    // include a checkbox input; meta.checked if available
+    const checked = blk.meta && blk.meta.checked ? 'checked' : '';
+    const text = currentHtml || '';
+    blk.html = `<label class="todo-label"><input type="checkbox" class="todo-checkbox" ${checked}/> <span class="todo-text">${text}</span></label>`;
+  } else {
+    // generic types (p, h1, h2, h3) — keep raw html/text
+    // If converting from list/quote/code, strip wrappers
+    if (/^(p|h1|h2|h3)$/.test(newType)) {
+      // try to extract text content
+      blk.html = stripHtml(currentHtml);
+    } else {
+      blk.html = currentHtml;
+    }
+  }
+
   // update DOM if present
   const el = notesEditor.querySelector(`[data-block-id="${blockId}"]`);
   if (el) {
     el.className = 'note-block note-block-' + newType;
-    // keep html as-is; some types like code may wrap in <code> later via formatting commands
+    el.innerHTML = blk.html || '';
+    // re-add handle
+    const existingHandle = el.querySelector('.note-block-handle');
+    if (!existingHandle) {
+      const h = document.createElement('div');
+      h.className = 'note-block-handle';
+      h.title = 'Drag to reorder';
+      h.innerHTML = '⠿';
+      h.style.display = 'inline-block';
+      h.style.width = '1.6rem';
+      h.style.marginRight = '0.5rem';
+      h.style.cursor = 'grab';
+      el.prepend(h);
+    }
+    // attach checkbox handler for todo
+    const cb = el.querySelector('.todo-checkbox');
+    if (cb) {
+      cb.addEventListener('change', (e) => {
+        blk.meta = blk.meta || {};
+        blk.meta.checked = !!e.target.checked;
+        scheduleSave(200);
+      });
+    }
   }
   scheduleSave(200);
 }
@@ -1302,6 +1362,9 @@ const commands = [
   { name: 'Heading 2', action: () => { const el = getBlockElementFromSelection(); if (!el) return; changeBlockType(el.dataset.blockId, 'h2'); }, },
   { name: 'Heading 3', action: () => { const el = getBlockElementFromSelection(); if (!el) return; changeBlockType(el.dataset.blockId, 'h3'); }, },
   { name: 'Code block', action: () => { const el = getBlockElementFromSelection(); if (!el) return; changeBlockType(el.dataset.blockId, 'code'); }, },
+  { name: 'Quote', action: () => { const el = getBlockElementFromSelection(); if (!el) return; changeBlockType(el.dataset.blockId, 'quote'); }, },
+  { name: 'Bulleted list', action: () => { const el = getBlockElementFromSelection(); if (!el) return; changeBlockType(el.dataset.blockId, 'ul'); }, },
+  { name: 'Numbered list', action: () => { const el = getBlockElementFromSelection(); if (!el) return; changeBlockType(el.dataset.blockId, 'ol'); }, },
   { name: 'Toggle To-do', action: () => { const el = getBlockElementFromSelection(); if (!el) return; changeBlockType(el.dataset.blockId, 'todo'); }, },
   { name: 'New Line', action: () => insertAtCursor('\n') },
 ];
