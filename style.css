@@ -1903,6 +1903,29 @@ td input[type="text"] {
   .topbar { padding-left: 64px; }
 }
 
+/* Force the hamburger to be viewport-left on very small / mobile where the topbar layout can shift
+   Use fixed positioning with safe-area offset so it feels flush on phones. */
+@media (max-width: 560px) {
+  #tabMenuButton {
+    position: fixed !important;
+    left: 8px !important;
+    top: calc(env(safe-area-inset-top, 8px) + 8px) !important;
+    transform: none !important;
+    margin: 0 !important;
+    z-index: 9999 !important;
+  }
+  .tab-dropdown {
+    position: fixed !important;
+    left: 8px !important;
+    top: calc(env(safe-area-inset-top, 8px) + 48px) !important; /* dropdown appears below button */
+    right: auto !important;
+    transform: none !important;
+    z-index: 9998 !important;
+  }
+  /* ensure topbar content doesn't sit under the fixed button */
+  .topbar { padding-left: 64px; }
+}
+
 /* FullCalendar mobile toolbar: avoid overlapping buttons and allow wrapping */
 @media (max-width: 560px) {
   /* make the toolbar wrap and give each chunk room */
