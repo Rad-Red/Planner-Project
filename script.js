@@ -656,7 +656,81 @@ function openActivePage() {
     div.addEventListener('keydown', (e) => {
       const sel = window.getSelection();
       if (!sel.rangeCount) return;
+      // helper: detect caret at start/end
+      function caretAtStart() {
+        const r = sel.getRangeAt(0).cloneRange();
+        r.selectNodeContents(div);
+        r.setEnd(sel.anchorNode, sel.anchorOffset);
+        return r.toString().length === 0;
+      }
+      function caretAtEnd() {
+        const r = sel.getRangeAt(0).cloneRange();
+        r.selectNodeContents(div);
+        r.setStart(sel.anchorNode, sel.anchorOffset);
+        return r.toString().length === 0;
+      }
+      // Shift+Enter -> soft break
+      if (e.key === 'Enter' && e.shiftKey) {
+        e.preventDefault();
+        // insert <br>
+        insertAtCursor('<br>');
+        return;
+      }
       if (e.key === 'Enter' && !e.shiftKey) {
+        // If this is a list block, create a new <li> instead of splitting into separate block
+        const page = pages.find(p => p.id === activePageId);
+        const blk = page && page.blocks.find(b => b.id === div.dataset.blockId);
+        if (blk && (blk.type === 'ul' || blk.type === 'ol')) {
+          e.preventDefault();
+          // find current list item node
+          const li = (() => {
+            let n = sel.anchorNode;
+            while (n && n !== div && n.nodeName.toLowerCase() !== 'li') n = n.parentNode;
+            return n && n.nodeName && n.nodeName.toLowerCase() === 'li' ? n : null;
+          })();
+          if (li) {
+            // split the li at caret position
+            const rightHtml = (function() {
+              const r = sel.getRangeAt(0).cloneRange();
+              r.setEndAfter(li);
+              const extracted = r.extractContents();
+              const w = document.createElement('div');
+              w.appendChild(extracted);
+              return w.innerHTML;
+            })();
+            // insert new li after current
+            const newLi = document.createElement('li');
+            newLi.innerHTML = rightHtml || '<br>';
+            li.parentNode.insertBefore(newLi, li.nextSibling);
+            // update block html and focus new li
+            blk.html = div.innerHTML;
+            scheduleSave(200);
+            // place caret at start of new Li
+            setTimeout(() => {
+              const r2 = document.createRange();
+              r2.selectNodeContents(newLi);
+              r2.collapse(true);
+              const s2 = window.getSelection(); s2.removeAllRanges(); s2.addRange(r2);
+            }, 20);
+          } else {
+            // no li found: append a new li
+            const ul = div.querySelector(blk.type === 'ul' ? 'ul' : 'ol');
+            if (ul) {
+              const newLi = document.createElement('li');
+              newLi.innerHTML = '<br>';
+              ul.appendChild(newLi);
+              blk.html = div.innerHTML;
+              scheduleSave(200);
+              setTimeout(() => {
+                const r2 = document.createRange();
+                r2.selectNodeContents(newLi);
+                r2.collapse(true);
+                const s2 = window.getSelection(); s2.removeAllRanges(); s2.addRange(r2);
+              }, 20);
+            }
+          }
+          return;
+        }
         e.preventDefault();
         // split current block at caret
         const rightHtml = splitBlockAtSelection(div) || '';
@@ -719,6 +793,35 @@ function openActivePage() {
               scheduleSave(200);
             }, 0);
             e.preventDefault();
+          }
+        }
+      }
+
+      // Arrow navigation across blocks
+      if (e.key === 'ArrowUp') {
+        if (caretAtStart()) {
+          const pg = pages.find(p => p.id === activePageId);
+          const idx = pg.blocks.findIndex(x => x.id === div.dataset.blockId);
+          if (idx > 0) {
+            e.preventDefault();
+            const prev = notesEditor.querySelector(`[data-block-id="${pg.blocks[idx-1].id}"]`);
+            if (prev) {
+              prev.focus();
+              placeCaretAtEnd(prev);
+            }
+          }
+        }
+      } else if (e.key === 'ArrowDown') {
+        if (caretAtEnd()) {
+          const pg = pages.find(p => p.id === activePageId);
+          const idx = pg.blocks.findIndex(x => x.id === div.dataset.blockId);
+          if (idx < pg.blocks.length - 1) {
+            e.preventDefault();
+            const next = notesEditor.querySelector(`[data-block-id="${pg.blocks[idx+1].id}"]`);
+            if (next) {
+              next.focus();
+              placeCaretAtStart(next);
+            }
           }
         }
       }
@@ -1200,6 +1303,41 @@ function getBlockElementFromSelection() {
   // climb until direct child of notesEditor (a block)
   while (node && node.parentNode && node.parentNode !== notesEditor) node = node.parentNode;
   return node && node.parentNode === notesEditor ? node : null;
+}
+
+function ensureBlockUnderCaret() {
+  // Return the block element that contains the caret, or create one at the end if none.
+  let el = getBlockElementFromSelection();
+  if (el) return el;
+  // create a new paragraph block at the end of the page
+  const pg = pages.find(p => p.id === activePageId);
+  if (!pg) return null;
+  const newBlock = { id: 'b' + Date.now(), type: 'p', html: '' };
+  pg.blocks.push(newBlock);
+  // render DOM block
+  const div = document.createElement('div');
+  div.className = 'note-block note-block-p';
+  div.setAttribute('contenteditable', 'true');
+  div.dataset.blockId = newBlock.id;
+  div.innerHTML = '';
+  const handle = document.createElement('div');
+  handle.className = 'note-block-handle';
+  handle.title = 'Drag to reorder';
+  handle.innerHTML = '⠿';
+  handle.style.display = 'inline-block';
+  handle.style.width = '1.6rem';
+  handle.style.marginRight = '0.5rem';
+  handle.style.cursor = 'grab';
+  div.prepend(handle);
+  notesEditor.appendChild(div);
+  // wire minimal handlers (input and keydown) - reuse existing logic by re-rendering page
+  // For simplicity, call openActivePage to re-render and focus the new block
+  scheduleSave(50);
+  openActivePage();
+  // focus last block
+  const last = notesEditor.querySelector(`[data-block-id="${newBlock.id}"]`);
+  if (last) placeCaretAtStart(last);
+  return last || null;
 }
 
 function changeBlockType(blockId, newType) {
