@@ -1452,20 +1452,30 @@ function loadWidgets() {
 function makeWidgetDraggableAndResizable(widget, dataIndex) {
   const header = widget.querySelector(".widget-header");
   let isDragging = false, offsetX = 0, offsetY = 0;
-
+  // mouse drag
   header.addEventListener("mousedown", e => {
     isDragging = true;
     offsetX = e.clientX - widget.offsetLeft;
     offsetY = e.clientY - widget.offsetTop;
     widget.style.zIndex = 1000;
+    e.preventDefault();
   });
 
-  document.addEventListener("mousemove", e => {
-    if (!isDragging) return;
-    let left = Math.round((e.clientX - offsetX) / GRID_SIZE) * GRID_SIZE;
-    let top = Math.round((e.clientY - offsetY) / GRID_SIZE) * GRID_SIZE;
+  // touch drag
+  header.addEventListener('touchstart', e => {
+    const t = e.touches && e.touches[0];
+    if (!t) return;
+    isDragging = true;
+    offsetX = t.clientX - widget.offsetLeft;
+    offsetY = t.clientY - widget.offsetTop;
+    widget.style.zIndex = 1000;
+    // prevent scrolling while dragging
+    e.preventDefault();
+  }, { passive: false });
 
-    // clamp within dashboard bounds
+  function handleDragMove(clientX, clientY) {
+    let left = Math.round((clientX - offsetX) / GRID_SIZE) * GRID_SIZE;
+    let top = Math.round((clientY - offsetY) / GRID_SIZE) * GRID_SIZE;
     const container = widget.parentElement || document.getElementById('dashboard');
     const maxLeft = Math.max(0, (container.clientWidth - widget.offsetWidth));
     const maxTop = Math.max(0, (container.clientHeight - widget.offsetHeight));
@@ -1473,18 +1483,34 @@ function makeWidgetDraggableAndResizable(widget, dataIndex) {
     if (top < 0) top = 0;
     if (left > maxLeft) left = maxLeft;
     if (top > maxTop) top = maxTop;
-
     widget.style.left = left + "px";
     widget.style.top = top + "px";
-
     if (dataIndex != null) {
       widgetsData[dataIndex].left = left;
       widgetsData[dataIndex].top = top;
       saveWidgets();
     }
+  }
+
+  document.addEventListener("mousemove", e => {
+    if (!isDragging) return;
+    handleDragMove(e.clientX, e.clientY);
   });
 
+  document.addEventListener('touchmove', e => {
+    if (!isDragging) return;
+    const t = e.touches && e.touches[0];
+    if (!t) return;
+    handleDragMove(t.clientX, t.clientY);
+    e.preventDefault();
+  }, { passive: false });
+
   document.addEventListener("mouseup", () => {
+    isDragging = false;
+    widget.style.zIndex = "";
+  });
+
+  document.addEventListener('touchend', () => {
     isDragging = false;
     widget.style.zIndex = "";
   });
@@ -1503,6 +1529,19 @@ function makeWidgetDraggableAndResizable(widget, dataIndex) {
     startW = widget.offsetWidth;
     startH = widget.offsetHeight;
   });
+
+  // touch start for resize
+  handle.addEventListener('touchstart', e => {
+    e.stopPropagation();
+    const t = e.touches && e.touches[0];
+    if (!t) return;
+    isResizing = true;
+    startX = t.clientX;
+    startY = t.clientY;
+    startW = widget.offsetWidth;
+    startH = widget.offsetHeight;
+    e.preventDefault();
+  }, { passive: false });
 
   document.addEventListener("mousemove", e => {
     if (!isResizing) return;
@@ -1532,7 +1571,38 @@ function makeWidgetDraggableAndResizable(widget, dataIndex) {
     }
   });
 
+  // touch move for resize
+  document.addEventListener('touchmove', e => {
+    if (!isResizing) return;
+    const t = e.touches && e.touches[0];
+    if (!t) return;
+    let newW = Math.round((startW + (t.clientX - startX)) / GRID_SIZE) * GRID_SIZE;
+    let newH = Math.round((startH + (t.clientY - startY)) / GRID_SIZE) * GRID_SIZE;
+
+    const minW = parseInt(widget.style.minWidth) || 160;
+    const minH = parseInt(widget.style.minHeight) || 120;
+    if (newW < minW) newW = minW;
+    if (newH < minH) newH = minH;
+
+    const container = widget.parentElement || document.getElementById('dashboard');
+    const maxW = Math.max(0, container.clientWidth - widget.offsetLeft);
+    const maxH = Math.max(0, container.clientHeight - widget.offsetTop);
+    if (newW > maxW) newW = maxW;
+    if (newH > maxH) newH = maxH;
+
+    widget.style.width = newW + "px";
+    widget.style.height = newH + "px";
+
+    if (dataIndex != null) {
+      widgetsData[dataIndex].width = newW;
+      widgetsData[dataIndex].height = newH;
+      saveWidgets();
+    }
+    e.preventDefault();
+  }, { passive: false });
+
   document.addEventListener("mouseup", () => { isResizing = false; });
+  document.addEventListener('touchend', () => { isResizing = false; });
 }
 
 // Clamp a single widget's position and size so it fits inside the dashboard container

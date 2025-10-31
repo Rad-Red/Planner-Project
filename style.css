@@ -522,6 +522,12 @@ button:hover,
   box-shadow: 0 2px 6px rgba(0,0,0,0.35);
 }
 
+/* make the resize handle easier to touch on phones and disable default touch gestures while dragging */
+@media (max-width: 900px) {
+  .widget-header { touch-action: none; -webkit-user-select: none; user-select: none; }
+  .widget .resize-handle { width: 20px; height: 20px; right: 10px; bottom: 10px; }
+}
+
 /* Dashboard container: position relative so absolutely positioned widgets are contained */
 #dashboard {
   position: relative;
@@ -1842,6 +1848,18 @@ td input[type="text"] {
     font-size: 1.1rem;
   }
   .fab-label { right: 70px; bottom: 20px; }
+}
+
+/* Mobile-specific calendar toolbar and topbar tweaks */
+@media (max-width: 900px) {
+  /* Allow FullCalendar toolbar buttons to wrap instead of squishing */
+  .fc .fc-toolbar-chunk { display:flex; gap:0.35rem; flex-wrap:wrap; align-items:center; }
+  #calendar .fc-toolbar .fc-button { padding: 6px 8px; font-size: 0.95rem; min-width: 44px; }
+
+  /* Place the tab dropdown fixed to the left so it doesn't get centered by flexible topbar content */
+  .tab-dropdown { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); z-index: 2000; }
+  /* make room for the left-anchored dropdown */
+  .topbar { padding-left: 64px; }
 }
 /* =========================
    Theme Variables
