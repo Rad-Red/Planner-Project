@@ -20,13 +20,17 @@
    position so it anchors to the viewport edges. */
 @media (min-width: 901px) {
   .tab-menu-content {
+    /* keep the panel flush to the left edge but constrain its width so it stays a small
+       dropdown instead of spanning the whole viewport. This preserves the "flush"
+       appearance while keeping the compact dropdown size on desktop. */
     position: fixed !important;
     left: env(safe-area-inset-left, 0px) !important;
-    right: env(safe-area-inset-right, 0px) !important;
-    width: calc(100% - (env(safe-area-inset-left, 0px) + env(safe-area-inset-right, 0px))) !important;
+    right: auto !important;
     top: calc(var(--topbar-height, 56px)) !important; /* position under topbar */
-    border-radius: 0 !important;
-    min-width: 0 !important;
+    width: auto !important;
+    max-width: 360px !important; /* keep dropdown compact on desktop */
+    border-radius: 0.3rem !important; /* preserve rounded look */
+    min-width: 180px !important;
     z-index: 9999 !important;
   }
 }
@@ -66,6 +70,23 @@ body {
 .notes-container { display:flex; width:100%; gap:1rem; padding:0.5rem; }
 .notes-sidebar { width:250px; min-width:200px; padding:0.75rem; background:var(--surface); border:1px solid var(--border); border-radius:0.6rem; }
 .notes-editor-wrap { flex:1; padding:0.5rem; min-width:300px; max-width:calc(100% - 270px); }
+
+/* Block editor styles for Notes (lightweight Notion-like feel) */
+.note-block {
+  padding:0.5rem 0.6rem;
+  margin:0.25rem 0;
+  min-height:1.6rem;
+  line-height:1.4;
+  outline: none;
+}
+.note-block:focus {
+  background: rgba(0,0,0,0.03);
+  border-radius:0.35rem;
+}
+.note-block-p { font-size:1rem; }
+.note-block-h1 { font-size:1.6rem; font-weight:700; }
+.note-block-h2 { font-size:1.3rem; font-weight:600; }
+.note-block-code { font-family: monospace; background:var(--surface); padding:0.4rem; border-radius:0.3rem; }
 
 @media (max-width:900px) {
   .content-wrapper, .notes-container { flex-direction:column; gap:1rem; }

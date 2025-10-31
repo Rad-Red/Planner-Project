@@ -535,7 +535,7 @@ const exportNoteBtn = document.getElementById("exportNoteBtn");
 const lastSavedEl = document.getElementById("lastSaved");
 const notesSearch = document.getElementById("notesSearch");
 
-let pages = []; // array of {id,title,content,updated}
+let pages = []; // array of {id,title,content,blocks,updated}  -- pages may be migrated to use blocks: [{id,type,html,meta}]
 let activePageId = null;
 
 /* persistence */
@@ -553,6 +553,20 @@ function loadPages() {
   try {
     const p = JSON.parse(localStorage.getItem("notesPages") || "[]");
     pages = Array.isArray(p) ? p : [];
+    // Migrate legacy pages that used `content` (string) into block model: pages[].blocks = [{id,type,html}]
+    pages.forEach((pg, idx) => {
+      // if blocks already present and valid, skip
+      if (Array.isArray(pg.blocks)) return;
+      // convert old `content` string into a single paragraph block
+      if (typeof pg.content === 'string') {
+        const bid = 'b' + (Date.now() + idx);
+        pg.blocks = [{ id: bid, type: 'p', html: pg.content || '' }];
+        // remove legacy content to avoid confusion
+        try { delete pg.content; } catch (e) {}
+      } else {
+        pg.blocks = [];
+      }
+    });
     const savedActive = localStorage.getItem("notesActiveId");
     activePageId = savedActive || (pages[0] && pages[0].id) || null;
   } catch (e) {
@@ -571,7 +585,9 @@ function renderPagesList(filter = "") {
   const query = (filter || "").toLowerCase().trim();
   pagesListEl.innerHTML = "";
   pages.forEach(page => {
-    if (query && !((page.title||"").toLowerCase().includes(query) || (page.content||"").toLowerCase().includes(query))) return;
+    // Support block model: search title and combined block text (fall back to legacy content)
+    const pageText = (Array.isArray(page.blocks) ? page.blocks.map(b => stripHtml(b.html || '')).join(' ') : (page.content || '')) || '';
+    if (query && !((page.title||"").toLowerCase().includes(query) || pageText.toLowerCase().includes(query))) return;
     const li = document.createElement("li");
     li.dataset.id = page.id;
     li.className = page.id === activePageId ? "active" : "";
@@ -602,8 +618,89 @@ function openActivePage() {
     lastSavedEl && (lastSavedEl.textContent = "No page selected");
     return;
   }
-  notesEditor.innerHTML = page.content || "";
+  // Render blocks-based editor for the page
   noteTitleInput.value = page.title || "";
+  notesEditor.innerHTML = "";
+  // ensure page.blocks exists
+  if (!Array.isArray(page.blocks)) page.blocks = [{ id: 'b' + Date.now(), type: 'p', html: '' }];
+  page.blocks.forEach(block => {
+    const div = document.createElement('div');
+    div.className = 'note-block note-block-' + (block.type || 'p');
+    div.setAttribute('contenteditable', 'true');
+    div.dataset.blockId = block.id;
+    div.innerHTML = block.html || '';
+    // input handler — update block html and schedule save
+    div.addEventListener('input', (e) => {
+      try {
+        const pg = pages.find(p => p.id === activePageId);
+        if (!pg) return;
+        const b = pg.blocks.find(x => x.id === div.dataset.blockId);
+        if (b) b.html = div.innerHTML;
+        scheduleSave(800);
+      } catch (err) { console.error(err); }
+    });
+    // key handling: Enter to insert new block, Backspace at start to merge with previous
+    div.addEventListener('keydown', (e) => {
+      const sel = window.getSelection();
+      if (!sel.rangeCount) return;
+      // Ctrl/Cmd+S handled elsewhere
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        // create a new empty paragraph block after this one
+        const pg = pages.find(p => p.id === activePageId);
+        if (!pg) return;
+        const idx = pg.blocks.findIndex(x => x.id === div.dataset.blockId);
+        const newBlock = { id: 'b' + Date.now(), type: 'p', html: '' };
+        pg.blocks.splice(idx + 1, 0, newBlock);
+        // render new block DOM after this div
+        const newDiv = document.createElement('div');
+        newDiv.className = 'note-block note-block-p';
+        newDiv.setAttribute('contenteditable', 'true');
+        newDiv.dataset.blockId = newBlock.id;
+        newDiv.innerHTML = '';
+        // attach same listeners by reusing this function's logic via dispatch
+        div.parentNode.insertBefore(newDiv, div.nextSibling);
+        // focus new block
+        setTimeout(() => {
+          newDiv.focus();
+        }, 20);
+        scheduleSave(200);
+      } else if (e.key === 'Backspace') {
+        // if caret at start and block is empty or caret at 0 and no content before, merge with previous
+        const range = sel.getRangeAt(0);
+        if (range.startOffset === 0 && range.endOffset === 0) {
+          const pg = pages.find(p => p.id === activePageId);
+          if (!pg) return;
+          const idx = pg.blocks.findIndex(x => x.id === div.dataset.blockId);
+          if (idx > 0) {
+            const prev = notesEditor.querySelector(`[data-block-id="${pg.blocks[idx-1].id}"]`);
+            // merge current html into previous
+            pg.blocks[idx-1].html = (pg.blocks[idx-1].html || '') + (div.innerHTML || '');
+            // remove current block from model and DOM
+            pg.blocks.splice(idx,1);
+            const toRemove = div;
+            setTimeout(() => {
+              if (prev) {
+                prev.focus();
+                // place caret at end
+                const r = document.createRange();
+                r.selectNodeContents(prev);
+                r.collapse(false);
+                const s = window.getSelection();
+                s.removeAllRanges();
+                s.addRange(r);
+              }
+              toRemove.remove();
+              scheduleSave(200);
+            }, 0);
+            e.preventDefault();
+          }
+        }
+      }
+    });
+
+    notesEditor.appendChild(div);
+  });
   lastSavedEl && (lastSavedEl.textContent = page.updated ? `Saved ${new Date(page.updated).toLocaleString()}` : "Unsaved");
   // Apply per-page editor settings (e.g., text color). Fall back to global settings.
   try {
@@ -621,7 +718,7 @@ function openActivePage() {
 /* create a new page */
 function createPage(title = "Untitled") {
   const id = "p" + Date.now();
-  const page = { id, title, content: "", updated: new Date().toISOString() };
+  const page = { id, title, blocks: [{ id: 'b' + Date.now(), type: 'p', html: '' }], updated: new Date().toISOString() };
   pages.unshift(page); // put newest first
   activePageId = id;
   savePages();
@@ -700,7 +797,7 @@ function scheduleSave(delay = 700) {
     const page = pages.find(p => p.id === activePageId);
     if (!page) return;
     page.title = (noteTitleInput.value || "Untitled").trim();
-    page.content = notesEditor.innerHTML;
+    // page.blocks should already be kept in sync by block input handlers; just update timestamp
     page.updated = new Date().toISOString();
     savePages();
     lastSavedEl && (lastSavedEl.textContent = `Saved ${nowText()}`);
@@ -712,7 +809,9 @@ function scheduleSave(delay = 700) {
 function exportCurrentPage() {
   const page = pages.find(p => p.id === activePageId);
   if (!page) { showPopup("No page to export"); return; }
-  const blob = new Blob([page.title + "\n\n" + (stripHtml(page.content) || "")], { type: "text/plain;charset=utf-8" });
+  // Export by concatenating block contents (fallback to legacy content)
+  const body = Array.isArray(page.blocks) ? page.blocks.map(b => stripHtml(b.html || '')).join('\n\n') : (stripHtml(page.content || '') || '');
+  const blob = new Blob([page.title + "\n\n" + body], { type: "text/plain;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
