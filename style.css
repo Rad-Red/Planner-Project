@@ -1912,8 +1912,9 @@ td input[type="text"] {
     position: absolute !important;
     left: 8px !important;
     right: auto !important;
-  /* move the button higher so it sits fully inside the topbar (no overflow) */
-  top: calc(env(safe-area-inset-top, 0px) + 2px) !important;
+  /* move the button much higher so it sits fully inside the topbar (no overflow) */
+  /* large negative offset relative to the safe-area baseline to bring the icon up */
+  top: calc(env(safe-area-inset-top, 0px) - 10px) !important;
     transform: none !important;
     margin: 0 !important;
     z-index: 2500 !important;
@@ -1922,7 +1923,7 @@ td input[type="text"] {
     position: absolute !important;
     left: 8px !important;
     right: auto !important;
-  top: calc(env(safe-area-inset-top, 0px) + 32px) !important; /* dropdown below button */
+  top: calc(env(safe-area-inset-top, 0px) + 22px) !important; /* dropdown below button */
     transform: none !important;
     z-index: 2499 !important;
   }
