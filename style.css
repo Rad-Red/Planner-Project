@@ -1910,19 +1910,19 @@ td input[type="text"] {
   /* place the hamburger slightly higher and more left to avoid overflowing the topbar */
   #tabMenuButton {
     position: absolute !important;
-    left: 8px !important;
+    left: 5px !important; /* moved left 3px */
     right: auto !important;
-   /* move the button down slightly (user requested ~15px down from current) */
-   top: calc(env(safe-area-inset-top, 0px) - 15px) !important; /* moved down 15px */
+    /* move the button down slightly (user requested ~15px down from current), now -14px to shift down 1px */
+    top: calc(env(safe-area-inset-top, 0px) - 14px) !important; /* adjusted by +1px (down 1px) */
     transform: none !important;
     margin: 0 !important;
     z-index: 2500 !important;
   }
   .tab-dropdown {
     position: absolute !important;
-    left: 8px !important;
+    left: 5px !important; /* match button left offset */
     right: auto !important;
-  top: calc(env(safe-area-inset-top, 0px) + 17px) !important; /* dropdown below button (keeps ~32px gap) */
+    top: calc(env(safe-area-inset-top, 0px) + 18px) !important; /* dropdown below button (moved down 1px) */
     transform: none !important;
     z-index: 2499 !important;
   }
