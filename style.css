@@ -1886,6 +1886,44 @@ td input[type="text"] {
 @media (max-width: 900px) {
   .tab-menu-content { left: 8px; right: auto; }
 }
+
+/* Stronger anchoring for the hamburger/menu on narrow screens */
+@media (max-width: 900px) {
+  .topbar { position: relative; min-height: 56px; }
+  /* ensure the hamburger sits exactly at the left edge and vertically centered */
+  #tabMenuButton {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2500;
+  }
+  .tab-dropdown { position: absolute; left: 12px; top: 100%; transform: translateY(6px); }
+  /* add padding-left so topbar content doesn't overlap the hamburger */
+  .topbar { padding-left: 64px; }
+}
+
+/* FullCalendar mobile toolbar: avoid overlapping buttons and allow wrapping */
+@media (max-width: 560px) {
+  /* make the toolbar wrap and give each chunk room */
+  .fc .fc-toolbar {
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .fc .fc-toolbar .fc-toolbar-chunk { display:flex; gap:6px; align-items:center; }
+  /* force center chunk (title) to take full row when needed */
+  .fc .fc-toolbar .fc-toolbar-chunk:nth-child(2) { flex-basis:100%; justify-content:center; order:2; }
+  .fc .fc-toolbar .fc-toolbar-chunk:first-child { order:1; }
+  .fc .fc-toolbar .fc-toolbar-chunk:last-child { order:3; }
+
+  .fc .fc-button-group { display:flex; gap:6px; }
+  .fc .fc-button { margin: 0; padding: 6px 10px; white-space:nowrap; min-width:44px; }
+  /* avoid calendar causing horizontal scroll on very small screens */
+  #calendar { box-sizing: border-box; padding: 0 6px; overflow-x: hidden; }
+}
 /* =========================
    Theme Variables
 ========================= */
