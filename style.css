@@ -1908,20 +1908,21 @@ td input[type="text"] {
 @media (max-width: 560px) {
   .topbar { position: relative; }
   #tabMenuButton {
-    position: absolute;
-    left: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    margin: 0;
-    z-index: 2500;
+    position: absolute !important;
+    left: 12px !important;
+    right: auto !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    margin: 0 !important;
+    z-index: 2500 !important;
   }
   .tab-dropdown {
-    position: absolute;
-    left: 8px;
-    top: 100%;
-    transform: translateY(6px);
-    right: auto;
-    z-index: 2499;
+    position: absolute !important;
+    left: 12px !important;
+    right: auto !important;
+    top: 100% !important;
+    transform: translateY(6px) !important;
+    z-index: 2499 !important;
   }
   /* keep padding so content doesn't overlap the button */
   .topbar { padding-left: 64px; }
