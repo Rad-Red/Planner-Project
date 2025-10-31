@@ -1909,7 +1909,8 @@ td input[type="text"] {
   #tabMenuButton {
     position: fixed !important;
     left: 8px !important;
-    top: calc(env(safe-area-inset-top, 8px) + 8px) !important;
+    /* nudge up by 4px to avoid spilling out of the topbar */
+    top: calc(env(safe-area-inset-top, 8px) + 4px) !important;
     transform: none !important;
     margin: 0 !important;
     z-index: 9999 !important;
@@ -1917,7 +1918,8 @@ td input[type="text"] {
   .tab-dropdown {
     position: fixed !important;
     left: 8px !important;
-    top: calc(env(safe-area-inset-top, 8px) + 48px) !important; /* dropdown appears below button */
+    /* dropdown slightly closer to the button after nudging up */
+    top: calc(env(safe-area-inset-top, 8px) + 44px) !important; /* dropdown appears below button */
     right: auto !important;
     transform: none !important;
     z-index: 9998 !important;
