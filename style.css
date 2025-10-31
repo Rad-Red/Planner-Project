@@ -1861,6 +1861,31 @@ td input[type="text"] {
   /* make room for the left-anchored dropdown */
   .topbar { padding-left: 64px; }
 }
+
+/* More robust small-screen toolbar layout for FullCalendar */
+@media (max-width: 560px) {
+  .fc .fc-toolbar {
+    display:flex;
+    flex-wrap:wrap;
+    gap:0.35rem;
+    align-items:center;
+    justify-content:space-between;
+  }
+  /* make each chunk flexible; allow the center title to occupy full row when needed */
+  .fc .fc-toolbar .fc-toolbar-chunk { flex: 1 1 auto; display:flex; gap:0.35rem; align-items:center; }
+  .fc .fc-toolbar .fc-toolbar-chunk:nth-child(2) { flex-basis:100%; justify-content:center; }
+  .fc .fc-button { white-space:nowrap; min-width:40px; }
+  /* prevent calendar container causing horizontal overflow */
+  #calendar { box-sizing: border-box; padding: 0 6px; }
+}
+
+/* Ensure the hamburger button isn't influenced by other centering rules */
+#tabMenuButton { position: relative; left: 0; margin: 0; padding: 8px 10px; }
+
+/* Ensure dropdown menu aligns to the left edge of the topbar on small screens */
+@media (max-width: 900px) {
+  .tab-menu-content { left: 8px; right: auto; }
+}
 /* =========================
    Theme Variables
 ========================= */
