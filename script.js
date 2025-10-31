@@ -485,7 +485,7 @@ function initCalendar() {
       const task = loadTasks().find(t => t.id === taskId);
       if (!task) return;
       currentTaskId = task.id;
-
+      
       document.getElementById("viewTaskTitle").textContent = task.title;
       document.getElementById("viewTaskDate").textContent =
         task.start.split("T")[0] +
@@ -495,29 +495,6 @@ function initCalendar() {
         : task.start.includes("T") ? task.start.split("T")[1] : "";
       document.getElementById("viewTaskDesc").textContent = task.description;
       viewTaskPopup.style.display = "block";
-    }
-    ,
-    eventDidMount: info => {
-      try {
-        const el = info.el;
-        if (!el) return;
-        const timeEl = el.querySelector('.fc-event-time');
-        if (!timeEl) return;
-        let txt = timeEl.textContent.trim();
-        if (!txt) return;
-
-        // Normalize text: remove whitespace, expand single-letter meridiem, lowercase am/pm, remove :00
-        // Examples: '12a' -> '12am', '9p' -> '9pm', '12:00 AM' -> '12am', '9:30 PM' -> '9:30pm'
-        txt = txt.replace(/\s+/g, ''); // remove spaces
-        // If ends with single letter a/p, expand
-        txt = txt.replace(/([ap])$/i, (m) => m.toLowerCase() === 'a' ? 'am' : 'pm');
-        // Replace AM/PM with lowercase
-        txt = txt.replace(/AM|PM/i, (m) => m.toLowerCase());
-        // Remove :00 when followed by am/pm
-        txt = txt.replace(/:00(?=am|pm)/, '');
-
-        timeEl.textContent = txt;
-      } catch (e) { /* ignore */ }
     }
   });
   calendar.render();
@@ -625,7 +602,13 @@ function openActivePage() {
   if (!Array.isArray(page.blocks)) page.blocks = [{ id: 'b' + Date.now(), type: 'p', html: '' }];
     page.blocks.forEach(block => {
     const div = document.createElement('div');
-    div.className = 'note-block note-block-' + (block.type || 'p');
+    // If this is a list item block (type 'li'), render as note-block-li and set data-list attribute
+    if (block.type === 'li') {
+      div.className = 'note-block note-block-li';
+      if (block.meta && block.meta.list) div.dataset.list = block.meta.list;
+    } else {
+      div.className = 'note-block note-block-' + (block.type || 'p');
+    }
     div.setAttribute('contenteditable', 'true');
     div.dataset.blockId = block.id;
     div.innerHTML = block.html || '';
@@ -1356,11 +1339,45 @@ function changeBlockType(blockId, newType) {
   } else if (newType === 'quote') {
     blk.html = '<blockquote>' + currentHtml + '</blockquote>';
   } else if (newType === 'ul') {
-    const item = stripHtml(currentHtml) || '';
-    blk.html = '<ul><li>' + escapeHtml(item) + '</li></ul>';
+    // Convert current block into multiple list-item blocks (type 'li') with meta.list = 'ul'
+    const tmp = document.createElement('div');
+    tmp.innerHTML = currentHtml || '';
+    let items = [];
+    const liEls = tmp.querySelectorAll('li');
+    if (liEls.length) {
+      liEls.forEach(li => items.push(stripHtml(li.innerHTML)));
+    } else {
+      const text = tmp.textContent || stripHtml(currentHtml) || '';
+      items = text.split(/\n+/).map(s => s.trim()).filter(Boolean);
+      if (!items.length && text.trim()) items = [text.trim()];
+    }
+    const idx = page.blocks.findIndex(b => b.id === blockId);
+    const newBlocks = items.map((it, i) => ({ id: 'b' + (Date.now() + i + 1), type: 'li', meta: { list: 'ul' }, html: escapeHtml(it) }));
+    // replace current block with list item blocks
+    page.blocks.splice(idx, 1, ...newBlocks);
+    // re-render page and exit
+    openActivePage();
+    scheduleSave(200);
+    return;
   } else if (newType === 'ol') {
-    const item = stripHtml(currentHtml) || '';
-    blk.html = '<ol><li>' + escapeHtml(item) + '</li></ol>';
+    // Convert current block into multiple ordered list-item blocks
+    const tmp = document.createElement('div');
+    tmp.innerHTML = currentHtml || '';
+    let items = [];
+    const liEls = tmp.querySelectorAll('li');
+    if (liEls.length) {
+      liEls.forEach(li => items.push(stripHtml(li.innerHTML)));
+    } else {
+      const text = tmp.textContent || stripHtml(currentHtml) || '';
+      items = text.split(/\n+/).map(s => s.trim()).filter(Boolean);
+      if (!items.length && text.trim()) items = [text.trim()];
+    }
+    const idx = page.blocks.findIndex(b => b.id === blockId);
+    const newBlocks = items.map((it, i) => ({ id: 'b' + (Date.now() + i + 1), type: 'li', meta: { list: 'ol' }, html: escapeHtml(it) }));
+    page.blocks.splice(idx, 1, ...newBlocks);
+    openActivePage();
+    scheduleSave(200);
+    return;
   } else if (newType === 'todo') {
     // include a checkbox input; meta.checked if available
     const checked = blk.meta && blk.meta.checked ? 'checked' : '';
@@ -1669,50 +1686,71 @@ function removeCommandTrigger() {
     const sel = window.getSelection();
     if (!sel.rangeCount) return;
     const range = sel.getRangeAt(0);
-  // Build a string of the text immediately before the caret by finding the previous text node
-  function findPrevTextNode(container, offset) {
-    if (container.nodeType === 3) return { node: container, offset };
-    for (let i = offset - 1; i >= 0; i--) {
-      let child = container.childNodes[i];
-      while (child && child.nodeType !== 3 && child.lastChild) child = child.lastChild;
-      if (child && child.nodeType === 3) return { node: child, offset: child.textContent.length };
-    }
-    let parent = container.parentNode;
-    let node = container;
-    while (parent) {
-      const idx = Array.prototype.indexOf.call(parent.childNodes, node);
-      for (let i = idx - 1; i >= 0; i--) {
-        let sibling = parent.childNodes[i];
-        while (sibling && sibling.nodeType !== 3 && sibling.lastChild) sibling = sibling.lastChild;
-        if (sibling && sibling.nodeType === 3) return { node: sibling, offset: sibling.textContent.length };
+  // More robust: walk backwards from caret to find the nearest slash and remove '/word' across nodes
+  function findSlashRangeBeforeCaret() {
+    const s = window.getSelection();
+    if (!s.rangeCount) return null;
+    const caretRange = s.getRangeAt(0).cloneRange();
+    let node = caretRange.endContainer;
+    let offset = caretRange.endOffset;
+
+    // Collect text backwards up to a reasonable limit
+    let chars = '';
+    const nodes = [];
+    let steps = 0;
+    while (node && steps < 2000) {
+      if (node.nodeType === 3) {
+        const text = node.textContent.slice(0, offset);
+        chars = text + chars;
+        nodes.unshift({ node, text });
       }
-      node = parent;
-      parent = parent.parentNode;
+      // move to previous node in document order
+      let prev = null;
+      if (node.previousSibling) {
+        prev = node.previousSibling;
+        // descend to the deepest last child
+        while (prev && prev.lastChild) prev = prev.lastChild;
+      } else {
+        prev = node.parentNode;
+      }
+      if (!prev) break;
+      node = prev;
+      offset = node.nodeType === 3 ? node.textContent.length : 0;
+      steps++;
     }
-    return null;
+
+    const m = chars.match(/\/(\w*)$/);
+    if (!m) return null;
+    // determine start position across nodes
+    let remaining = m[0].length; // include '/'
+    let startNode = null, startOffset = 0;
+    for (let i = nodes.length - 1; i >= 0; i--) {
+      const t = nodes[i].text;
+      if (remaining <= t.length) {
+        startNode = nodes[i].node;
+        startOffset = t.length - remaining;
+        break;
+      }
+      remaining -= t.length;
+    }
+    if (!startNode) return null;
+    const r = document.createRange();
+    r.setStart(startNode, startOffset);
+    r.setEnd(caretRange.endContainer, caretRange.endOffset);
+    return r;
   }
 
-    const found = findPrevTextNode(range.startContainer, range.startOffset);
-    if (!found) return;
-    const node = found.node;
-    const offset = found.offset;
-
-    const text = node.textContent || '';
-    // remove the trailing '/word' (slash plus word chars) just before caret
-    const m = text.slice(0, offset).match(/\/(\w*)$/);
-    if (m) {
-      console.debug('[cmd] removeCommandTrigger matched', m[0]);
-      const lastSlash = offset - m[0].length;
-      const before = text.slice(0, lastSlash);
-      const after = text.slice(offset);
-      node.textContent = before + after;
-      const r = document.createRange();
-      r.setStart(node, before.length);
-      r.collapse(true);
-      sel.removeAllRanges();
-      sel.addRange(r);
-      console.debug('[cmd] removeCommandTrigger removed, new text segment', before.slice(-40));
-    }
+  const slashRange = findSlashRangeBeforeCaret();
+  if (slashRange) {
+    slashRange.deleteContents();
+    const sel2 = window.getSelection();
+    sel2.removeAllRanges();
+    const r2 = document.createRange();
+    r2.setStart(slashRange.startContainer, slashRange.startOffset);
+    r2.collapse(true);
+    sel2.addRange(r2);
+    return;
+  }
   } catch (e) {
     console.error('removeCommandTrigger error', e);
   }

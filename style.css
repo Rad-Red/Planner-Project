@@ -97,6 +97,11 @@ body {
 /* Quote and list styles */
 .note-block-quote { border-left:3px solid var(--border); padding-left:0.8rem; color:var(--secondary); font-style:italic; }
 .note-block-ul ul, .note-block-ol ol { margin:0.2rem 0; padding-left:1.2rem; }
+.note-block-li::before { content: '•'; margin-right:0.6rem; color:var(--secondary); }
+.note-block-li[data-list="ol"]::before { content: '1.'; }
+.note-block-li { display:flex; align-items:flex-start; }
+.note-block-li > .note-block-handle { margin-top:0.25rem; }
+.note-block-li .note-block-handle { margin-right:0.6rem; }
 .note-block-ul li, .note-block-ol li { margin:0.2rem 0; }
 .todo-checkbox { transform:translateY(2px); margin-right:0.4rem; }
 .todo-label { display:flex; align-items:center; gap:0.6rem; }
