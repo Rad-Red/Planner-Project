@@ -1903,28 +1903,27 @@ td input[type="text"] {
   .topbar { padding-left: 64px; }
 }
 
-/* Force the hamburger to be viewport-left on very small / mobile where the topbar layout can shift
-   Use fixed positioning with safe-area offset so it feels flush on phones. */
+/* On very small screens, keep the hamburger inside the topbar (absolute) so it scrolls away with
+   the topbar rather than staying fixed to the viewport. This preserves the expected behavior. */
 @media (max-width: 560px) {
+  .topbar { position: relative; }
   #tabMenuButton {
-    position: fixed !important;
-    left: 8px !important;
-    /* nudge up by 4px to avoid spilling out of the topbar */
-    top: calc(env(safe-area-inset-top, 8px) + 4px) !important;
-    transform: none !important;
-    margin: 0 !important;
-    z-index: 9999 !important;
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0;
+    z-index: 2500;
   }
   .tab-dropdown {
-    position: fixed !important;
-    left: 8px !important;
-    /* dropdown slightly closer to the button after nudging up */
-    top: calc(env(safe-area-inset-top, 8px) + 44px) !important; /* dropdown appears below button */
-    right: auto !important;
-    transform: none !important;
-    z-index: 9998 !important;
+    position: absolute;
+    left: 8px;
+    top: 100%;
+    transform: translateY(6px);
+    right: auto;
+    z-index: 2499;
   }
-  /* ensure topbar content doesn't sit under the fixed button */
+  /* keep padding so content doesn't overlap the button */
   .topbar { padding-left: 64px; }
 }
 
@@ -2036,12 +2035,8 @@ td input[type="text"] {
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-<<<<<<< HEAD
-  font-size: 1.5vw;
-=======
   /* Use a stable, responsive base font-size: clamp keeps it readable on phones and desktops */
   font-size: clamp(14px, 1.2vw, 18px);
->>>>>>> 65f89c7 (Initial commit: project files and .gitignore)
   background-color: var(--bg);
   color: var(--text);
 }
@@ -2068,21 +2063,12 @@ button:hover,
   display: flex;
   align-items: center;
   justify-content: space-between;
-<<<<<<< HEAD
-  width: 100vw;
-  height: 5vh;
-  background-color: var(--secondary);
-  color: var(--text);
-  padding: 0.5vh 1vw;
-  font-size: 1.2vw;
-=======
   width: 100%; /* prefer percent so scrollbars don't cause overflow */
   height: auto; /* allow content to define height on small screens */
   background-color: var(--secondary);
   color: var(--text);
   padding: 0.6rem 1rem;
   font-size: 1rem;
->>>>>>> 65f89c7 (Initial commit: project files and .gitignore)
   position: relative;
 }
 
@@ -2128,13 +2114,8 @@ button:hover,
 .content-wrapper {
   display: flex;
   flex-direction: row;
-<<<<<<< HEAD
-  gap: 1vw;
-  width: 100vw; /* allow full-bleed dashboard */
-=======
   gap: 1rem;
   width: 100%; /* avoid viewport-width issues on mobile */
->>>>>>> 65f89c7 (Initial commit: project files and .gitignore)
   flex-grow: 1;
   align-items: stretch;
 }
@@ -2337,11 +2318,7 @@ button:hover,
 #dashboard {
   position: relative;
   flex: 1 1 auto;
-<<<<<<< HEAD
-  width: 100vw; /* use full viewport width */
-=======
   width: 100%; /* fill container width instead of forcing viewport width */
->>>>>>> 65f89c7 (Initial commit: project files and .gitignore)
   min-height: calc(100vh - 6vh);
   height: calc(100vh - 6vh);
   padding: 1rem;
@@ -2985,17 +2962,11 @@ td input[type="text"] {
 .tab-menu-content {
   display: flex;
   flex-direction: column;
-<<<<<<< HEAD
-  position: fixed;
-  left: 0;
-  top: 5vh;
-=======
   /* position absolute so the dropdown is positioned relative to the topbar/tab-dropdown parent
      (fixes incorrect placement on small screens where topbar height changes) */
   position: absolute;
   left: 0;
   top: 100%;
->>>>>>> 65f89c7 (Initial commit: project files and .gitignore)
   background-color: var(--secondary);
   color: var(--on-secondary);
   min-width: 180px;
@@ -3005,13 +2976,8 @@ td input[type="text"] {
   overflow: hidden;
   max-height: 0;
   opacity: 0;
-<<<<<<< HEAD
-  transform: translateX(-10px);
-  transition: max-height 0.4s ease, opacity 0.4s ease, transform 0.3s ease;
-=======
   transform: translateX(-6px);
   transition: max-height 0.28s ease, opacity 0.28s ease, transform 0.2s ease;
->>>>>>> 65f89c7 (Initial commit: project files and .gitignore)
 }
 
 .tab-menu-content.show {
@@ -3278,11 +3244,7 @@ td input[type="text"] {
 /* Notes container */
 .notes-container {
   display: flex;
-<<<<<<< HEAD
-  width: 100vw;
-=======
   width: 100%;
->>>>>>> 65f89c7 (Initial commit: project files and .gitignore)
   max-width: 100%;
   padding: 0.5rem;       /* small breathing space around the container */
   gap: 1rem;
@@ -3397,11 +3359,7 @@ td input[type="text"] {
   gap: 0.6rem;
   padding: 0.5rem;               /* breathing space around editor */
   min-width: 300px;
-<<<<<<< HEAD
-  max-width: calc(100vw - 270px); /* account for sidebar width + gap */
-=======
   max-width: calc(100% - 270px); /* account for sidebar width + gap (use % to avoid viewport overflow) */
->>>>>>> 65f89c7 (Initial commit: project files and .gitignore)
 }
 
 /* Note topbar */
@@ -3456,11 +3414,7 @@ td input[type="text"] {
 
 /* Small screens */
 @media (max-width: 900px) {
-<<<<<<< HEAD
-  .notes-container { flex-direction: column; width: 95vw; }
-=======
   .notes-container { flex-direction: column; width: 95%; }
->>>>>>> 65f89c7 (Initial commit: project files and .gitignore)
   .notes-sidebar { width: 100%; display:flex; flex-direction:row; gap:0.5rem; overflow:auto; padding:0.4rem; }
   .pages-list { display:flex; gap:0.4rem; flex-direction:row; }
   .notes-editor { min-height: 50vh; }
@@ -3651,19 +3605,6 @@ td input[type="text"] {
    Responsive
 ========================= */
 @media (max-width: 900px) {
-<<<<<<< HEAD
-  body {
-    font-size: 2vw;
-  }
-
-  .content-wrapper {
-    flex-direction: column;
-    gap: 2vh;
-  }
-
-  .sidebar {
-    width: 90vw;
-=======
   /* rely on the clamp() base font-size; avoid switching to vw-based sizing which can be inconsistent */
 
   .content-wrapper {
@@ -3673,7 +3614,6 @@ td input[type="text"] {
 
   .sidebar {
     width: 90%;
->>>>>>> 65f89c7 (Initial commit: project files and .gitignore)
     flex-direction: row;
     justify-content: space-around;
   }
@@ -3681,11 +3621,7 @@ td input[type="text"] {
   .topbar {
     flex-direction: column;
     height: auto;
-<<<<<<< HEAD
-    padding: 1vh 1vw;
-=======
     padding: 0.6rem 1rem;
->>>>>>> 65f89c7 (Initial commit: project files and .gitignore)
   }
 
   .tab-buttons {
@@ -3694,12 +3630,6 @@ td input[type="text"] {
   }
 
   td input[type="text"] {
-<<<<<<< HEAD
-    font-size: 1.5vw;
-  }
-}
-
-=======
     font-size: 1rem;
   }
 }
@@ -3715,5 +3645,3 @@ td input[type="text"] {
   }
   .fab-label { right: 70px; bottom: 20px; }
 }
-
->>>>>>> 65f89c7 (Initial commit: project files and .gitignore)
