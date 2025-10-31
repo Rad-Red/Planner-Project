@@ -1912,8 +1912,8 @@ td input[type="text"] {
     position: absolute !important;
     left: 8px !important;
     right: auto !important;
-  /* use safe-area inset so it won't collide with device notch/status bar; smaller value to move it up */
-  top: calc(env(safe-area-inset-top, 4px) + 2px) !important;
+  /* move the button higher so it sits fully inside the topbar (no overflow) */
+  top: calc(env(safe-area-inset-top, 0px) + 2px) !important;
     transform: none !important;
     margin: 0 !important;
     z-index: 2500 !important;
@@ -1922,7 +1922,7 @@ td input[type="text"] {
     position: absolute !important;
     left: 8px !important;
     right: auto !important;
-  top: calc(env(safe-area-inset-top, 4px) + 36px) !important; /* dropdown below button */
+  top: calc(env(safe-area-inset-top, 0px) + 32px) !important; /* dropdown below button */
     transform: none !important;
     z-index: 2499 !important;
   }
