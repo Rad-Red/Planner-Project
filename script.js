@@ -600,7 +600,7 @@ function openActivePage() {
   notesEditor.innerHTML = "";
   // ensure page.blocks exists
   if (!Array.isArray(page.blocks)) page.blocks = [{ id: 'b' + Date.now(), type: 'p', html: '' }];
-    page.blocks.forEach(block => {
+  page.blocks.forEach((block, blockIndex) => {
     const div = document.createElement('div');
     // If this is a list item block (type 'li'), render as note-block-li and set data-list attribute
     if (block.type === 'li') {
@@ -613,7 +613,7 @@ function openActivePage() {
     div.dataset.blockId = block.id;
     div.innerHTML = block.html || '';
 
-    // add drag handle
+  // add drag handle
     const handle = document.createElement('div');
     handle.className = 'note-block-handle';
     handle.title = 'Drag to reorder';
@@ -622,7 +622,31 @@ function openActivePage() {
     handle.style.width = '1.6rem';
     handle.style.marginRight = '0.5rem';
     handle.style.cursor = 'grab';
-    div.prepend(handle);
+    // For list items, add a leading number/bullet element
+    if (block.type === 'li') {
+      const marker = document.createElement('div');
+      marker.className = 'li-marker';
+      marker.style.display = 'inline-block';
+      marker.style.width = '2rem';
+      marker.style.marginRight = '0.4rem';
+      marker.style.color = 'var(--secondary)';
+      // compute index among sibling list items for ordered lists
+      if (block.meta && block.meta.list === 'ol') {
+        // count previous li blocks with same list type
+        let idx = 0;
+        for (let i = 0; i < blockIndex; i++) {
+          const b = page.blocks[i];
+          if (b && b.type === 'li' && b.meta && b.meta.list === 'ol') idx++;
+        }
+        marker.textContent = (idx + 1) + '.';
+      } else {
+        marker.textContent = '•';
+      }
+      div.prepend(marker);
+      div.prepend(handle);
+    } else {
+      div.prepend(handle);
+    }
 
     // input handler — update block html and schedule save
     div.addEventListener('input', (e) => {
@@ -1425,6 +1449,35 @@ function changeBlockType(blockId, newType) {
   scheduleSave(200);
 }
 
+/* Create or transform a block at caret to a given type. If there's an empty block at caret, change its type; otherwise insert a new block after current. Returns the new/changed block element. */
+function createOrTransformBlockAtCaret(type, initialHtml = '') {
+  // ensure active page
+  const page = pages.find(p => p.id === activePageId);
+  if (!page) return null;
+  let el = getBlockElementFromSelection();
+  if (!el) {
+    // create new block at end
+    el = ensureBlockUnderCaret();
+  }
+  if (!el) return null;
+  const blk = page.blocks.find(b => b.id === el.dataset.blockId);
+  if (!blk) return null;
+  const textContent = (stripHtml(blk.html || '') || '').trim();
+  if (!textContent) {
+    // empty block -> transform in-place
+    changeBlockType(blk.id, type);
+    return notesEditor.querySelector(`[data-block-id="${blk.id}"]`);
+  }
+  // otherwise split and insert new block after
+  const rightHtml = splitBlockAtSelection(el) || '';
+  const idx = page.blocks.findIndex(b => b.id === blk.id);
+  const newBlock = { id: 'b' + Date.now(), type: type === 'p' ? 'p' : type, html: initialHtml || rightHtml, meta: {} };
+  page.blocks.splice(idx + 1, 0, newBlock);
+  openActivePage();
+  scheduleSave(200);
+  return notesEditor.querySelector(`[data-block-id="${newBlock.id}"]`);
+}
+
 function splitBlockAtSelection(blockEl) {
   const sel = window.getSelection();
   if (!sel.rangeCount) return null;
@@ -1512,15 +1565,14 @@ const commands = [
   { name: 'Bold', action: () => applyInlineFormat('strong') },
   { name: 'Italic', action: () => applyInlineFormat('em') },
   { name: 'Underline', action: () => applyInlineFormat('u') },
-  { name: 'Heading 1', action: () => {
-      const el = getBlockElementFromSelection(); if (!el) return; changeBlockType(el.dataset.blockId, 'h1'); }, },
-  { name: 'Heading 2', action: () => { const el = getBlockElementFromSelection(); if (!el) return; changeBlockType(el.dataset.blockId, 'h2'); }, },
-  { name: 'Heading 3', action: () => { const el = getBlockElementFromSelection(); if (!el) return; changeBlockType(el.dataset.blockId, 'h3'); }, },
-  { name: 'Code block', action: () => { const el = getBlockElementFromSelection(); if (!el) return; changeBlockType(el.dataset.blockId, 'code'); }, },
-  { name: 'Quote', action: () => { const el = getBlockElementFromSelection(); if (!el) return; changeBlockType(el.dataset.blockId, 'quote'); }, },
-  { name: 'Bulleted list', action: () => { const el = getBlockElementFromSelection(); if (!el) return; changeBlockType(el.dataset.blockId, 'ul'); }, },
-  { name: 'Numbered list', action: () => { const el = getBlockElementFromSelection(); if (!el) return; changeBlockType(el.dataset.blockId, 'ol'); }, },
-  { name: 'Toggle To-do', action: () => { const el = getBlockElementFromSelection(); if (!el) return; changeBlockType(el.dataset.blockId, 'todo'); }, },
+  { name: 'Heading 1', action: () => { createOrTransformBlockAtCaret('h1'); }, },
+  { name: 'Heading 2', action: () => { createOrTransformBlockAtCaret('h2'); }, },
+  { name: 'Heading 3', action: () => { createOrTransformBlockAtCaret('h3'); }, },
+  { name: 'Code block', action: () => { createOrTransformBlockAtCaret('code'); }, },
+  { name: 'Quote', action: () => { createOrTransformBlockAtCaret('quote'); }, },
+  { name: 'Bulleted list', action: () => { createOrTransformBlockAtCaret('li'); const el = getBlockElementFromSelection(); if (el) changeBlockType(el.dataset.blockId, 'ul'); }, },
+  { name: 'Numbered list', action: () => { createOrTransformBlockAtCaret('li'); const el = getBlockElementFromSelection(); if (el) changeBlockType(el.dataset.blockId, 'ol'); }, },
+  { name: 'Toggle To-do', action: () => { createOrTransformBlockAtCaret('todo'); }, },
   { name: 'New Line', action: () => insertAtCursor('\n') },
 ];
 
